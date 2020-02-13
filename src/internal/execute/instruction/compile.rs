@@ -50,7 +50,6 @@ fn compile(mut context: Data, compiler: Data, parents: Data, source_string: Asci
     confirm!(context.set_entry(&keyword!(str, "code"), string!(source_string.clone()), true));
     confirm!(context.set_entry(&keyword!(str, "file"), source_file_data, true));
     confirm!(context.set_entry(&keyword!(str, "directory"), string!(source_directory), true));
-    confirm!(context.set_entry(&keyword!(str, "compiler"), compiler.clone(), true));
 
     confirm!(print_stage("tokenize", "tokenizing", &build_map, &context));
     let (token_stream, variant_registry) = confirm!(tokenize(&index_field!(context, "compiler"), source_string, source_file, &None, &build_map, &context));
