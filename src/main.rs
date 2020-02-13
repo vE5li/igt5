@@ -15,7 +15,7 @@ use std::env;
 
 fn print_help_menu() {
     println!("usage:");
-    println!("   $   igt5 <method> [options]");
+    println!("   $   igt5 [options]");
     println!("options:");
     println!("  -h   show help menu");
     println!("  -a   pass compiler arguments");
