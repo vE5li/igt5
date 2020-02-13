@@ -25,6 +25,7 @@ lazy_static! {
     pub static ref CONDITIONS: HashMap<&'static str, Description> = {
         let mut map = HashMap::new();
         push_description!(map, "always",            Always,             1);
+        push_description!(map, "not_always",        NotAlways,          1);
         push_description!(map, "zero",              Zero,               2);
         push_description!(map, "not_zero",          NotZero,            2);
         push_description!(map, "true",              True,               2);

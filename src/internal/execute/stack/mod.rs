@@ -153,6 +153,8 @@ impl<'s> DataStack<'s> {
 
             Signature::Always => true,
 
+            Signature::NotAlways => false,
+
             Signature::Zero => source[1] == integer!(0) || source[1] == float!(0.0) || source[1] == character!(code, 0),
 
             Signature::NotZero => source[1] != integer!(0) && source[1] != float!(0.0) && source[1] != character!(code, 0),

@@ -1,6 +1,7 @@
 #[derive(Clone)]
 pub enum Signature {
     Always,
+    NotAlways,
     Zero,
     NotZero,
     True,
