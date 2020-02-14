@@ -17,11 +17,11 @@ use self::signature::Signature;
 use std::process::{ Command, Stdio };
 
 macro_rules! reduce_list {
-    ($parameters:expr, $method:ident) => ({
+    ($parameters:expr, $function:ident) => ({
         let mut iterator = $parameters.iter();
         let mut result = iterator.next().unwrap().clone();
         while let Some(instance) = iterator.next() {
-            result = confirm!(result.$method(instance));
+            result = confirm!(result.$function(instance));
         }
         Some(result)
     });
@@ -35,13 +35,13 @@ macro_rules! last_return {
 }
 
 macro_rules! reduce_positions {
-    ($parameters:expr, $method:ident) => ({
+    ($parameters:expr, $function:ident) => ({
         let mut iterator = $parameters.iter();
         let mut first = confirm!(Position::parse_positions(iterator.next().unwrap()));
         while let Some(next) = iterator.next() {
             first.append(&mut confirm!(Position::parse_positions(next)));
         }
-        Position::serialize_positions(&Position::$method(first, false))
+        Position::serialize_positions(&Position::$function(first, false))
     });
 }
 
@@ -60,7 +60,7 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
     let internal_name = name.printable();
     let description = match (*INSTRUCTIONS).get(internal_name.as_str()) {
         Some(description) => description,
-        None => return error!(InvalidCompilerMethod, keyword!(name.clone())),
+        None => return error!(InvalidCompilerFunction, keyword!(name.clone())),
     };
 
     if !description.invokable && raw_parameters.is_some() {
@@ -304,7 +304,7 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
 
                             "build" => confirm!(build.modify(None, parameters[1].clone())),
 
-                            "method" => confirm!(root.modify(Some(&parameters[0]), parameters[1].clone())),
+                            "function" => confirm!(root.modify(Some(&parameters[0]), parameters[1].clone())),
 
                             "template" => confirm!(root.modify(Some(&parameters[0]), parameters[1].clone())),
 
@@ -322,7 +322,7 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
 
                             "build" => confirm!(build.modify(Some(&path!(steps.iter().skip(1).cloned().collect())), parameters[1].clone())),
 
-                            "method" => confirm!(root.modify(Some(&parameters[0]), parameters[1].clone())),
+                            "function" => confirm!(root.modify(Some(&parameters[0]), parameters[1].clone())),
 
                             "template" => confirm!(root.modify(Some(&parameters[0]), parameters[1].clone())),
 
@@ -356,9 +356,9 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
             Signature::CompileModule => *last = Some(confirm!(compile_module(parameters, context))),
 
             Signature::Call => {
-                let call_method = parameters.remove(0);
+                let call_function = parameters.remove(0);
                 let parameters = parameters.into_iter().collect();
-                *last = confirm!(method(&call_method, parameters, current_pass, root, build, context));
+                *last = confirm!(function(&call_function, parameters, current_pass, root, build, context));
             },
 
             Signature::CallList => {
@@ -367,7 +367,7 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
                     2 => unpack_list!(&parameters[1]),
                     _ => return error!(UnexpectedParameter, parameters[2].clone()),
                 };
-                *last = confirm!(method(&parameters[0], passed_parameters, current_pass, root, build, context));
+                *last = confirm!(function(&parameters[0], passed_parameters, current_pass, root, build, context));
             },
 
             Signature::Invoke => {
@@ -397,9 +397,9 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
 
                             "build" => *last = Some(build.clone()),
 
-                            "method" => {
-                                let method_map = confirm!(root.index(&keyword!(str, "method")));
-                                *last = Some(expect!(method_map, Message, string!(str, "missing field method")));
+                            "function" => {
+                                let function_map = confirm!(root.index(&keyword!(str, "function")));
+                                *last = Some(expect!(function_map, Message, string!(str, "missing field function")));
                             },
 
                             "template" => {
@@ -422,10 +422,10 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
 
                             "build" => *last = Some(expect!(confirm!(build.index(&path!(steps.iter().skip(1).cloned().collect()))), Message, string!(str, "failed to resolve"))),
 
-                            "method" => {
-                                let method_map = confirm!(root.index(&keyword!(str, "method")));
-                                let method_map = expect!(method_map, Message, string!(str, "missing field method"));
-                                *last = Some(expect!(confirm!(method_map.index(&path!(steps.iter().skip(1).cloned().collect()))), Message, string!(str, "failed to resolve")));
+                            "function" => {
+                                let function_map = confirm!(root.index(&keyword!(str, "function")));
+                                let function_map = expect!(function_map, Message, string!(str, "missing field function"));
+                                *last = Some(expect!(confirm!(function_map.index(&path!(steps.iter().skip(1).cloned().collect()))), Message, string!(str, "failed to resolve")));
                             },
 
                             "template" => {

@@ -2,13 +2,13 @@ use internal::*;
 use super::super::ParameterType;
 
 #[derive(Debug, Clone)]
-pub struct MethodParameter {
+pub struct FunctionParameter {
     pub key:           Option<Data>,
     pub type_filter:   Option<Vec<ParameterType>>,
     pub variadic:      bool,
 }
 
-impl MethodParameter {
+impl FunctionParameter {
 
     pub fn new(appearance: &Data) -> Status<Self> {
 
@@ -49,7 +49,7 @@ impl MethodParameter {
         })
     }
 
-    pub fn validate(scope: &mut Data, parameters: &Vector<Data>, expected_parameters: &Vec<MethodParameter>) -> Status<()> {
+    pub fn validate(scope: &mut Data, parameters: &Vector<Data>, expected_parameters: &Vec<FunctionParameter>) -> Status<()> {
         let mut parameter_stack = DataStack::new(parameters);
 
         for (index, expected_parameter) in expected_parameters.iter().enumerate() {

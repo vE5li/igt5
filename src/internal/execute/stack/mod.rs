@@ -117,11 +117,11 @@ impl<'s> DataStack<'s> {
                         return success!(());
                     }
                 } else {
-                    return error!(UnexpectedCompilerMethod, keyword!(str, "else"));
+                    return error!(UnexpectedCompilerFunction, keyword!(str, "else"));
                 }
             },
 
-            None => return error!(UnexpectedCompilerMethod, keyword!(str, "else")),
+            None => return error!(UnexpectedCompilerFunction, keyword!(str, "else")),
         }
 
         let description = (*INSTRUCTIONS).get("else").unwrap();
@@ -399,7 +399,7 @@ impl<'s> DataStack<'s> {
         loop {
             let top_flow = match self.flow.pop() {
                 Some(flow) => flow,
-                None => return error!(UnexpectedCompilerMethod, keyword!(str, "break")),
+                None => return error!(UnexpectedCompilerFunction, keyword!(str, "break")),
             };
             match top_flow {
                 Flow::IndexIteration(..) => break,
@@ -419,7 +419,7 @@ impl<'s> DataStack<'s> {
                 Some(Flow::While(..)) => break,
                 Some(Flow::For(..)) => break,
                 Some(Flow::Condition(..)) => { self.flow.pop().unwrap(); },
-                None => return error!(UnexpectedCompilerMethod, keyword!(str, "continue")),
+                None => return error!(UnexpectedCompilerFunction, keyword!(str, "continue")),
             }
         }
         return self.update(true, last, root, scope, build, context);
@@ -427,7 +427,7 @@ impl<'s> DataStack<'s> {
 
     pub fn end(&mut self, parameters: Vec<Data>, last: &mut Option<Data>, root: &Data, scope: &Data, build: &Data, context: &Data) -> Status<()> {
         confirm!(Self::confirm_paramters(parameters));
-        ensure!(!self.flow.is_empty(), UnexpectedCompilerMethod, keyword!(str, "end"));
+        ensure!(!self.flow.is_empty(), UnexpectedCompilerFunction, keyword!(str, "end"));
         return self.update(false, last, root, scope, build, context);
     }
 
@@ -466,9 +466,9 @@ impl<'s> DataStack<'s> {
                     }
                 },
 
-                "method" => {
-                    let method_map = confirm!(root.index(&keyword!(str, "method")));
-                    expect!(method_map, Message, string!(str, "missing field method"))
+                "function" => {
+                    let function_map = confirm!(root.index(&keyword!(str, "function")));
+                    expect!(function_map, Message, string!(str, "missing field function"))
                 },
 
                 "template" => {

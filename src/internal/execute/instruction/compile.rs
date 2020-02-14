@@ -4,11 +4,10 @@ use tokenize::tokenize;
 use parse::parse;
 use build::build;
 
-fn print_stage(prefix: &str, stage: &str, build: &Data, context: &Data) -> Status<()> {
-    let formatter_method_path = path!(vector![keyword!(str, "method"), keyword!(str, prefix)]);
-    let compiler = index_field!(context, "compiler");
-    match confirm!(compiler.index(&formatter_method_path)) {
-        Some(formatter_method) => { confirm!(method(&formatter_method, Vector::new(), &None, &compiler, build, context)); },
+fn print_stage(prefix: &str, stage: &str, compiler: &Data, build: &Data, context: &Data) -> Status<()> {
+    let formatter_function_path = path!(vector![keyword!(str, "function"), keyword!(str, prefix)]);
+    match confirm!(compiler.index(&formatter_function_path)) {
+        Some(formatter_function) => { confirm!(function(&formatter_function, Vector::new(), &None, &compiler, build, context)); },
         None => println!("{}...", stage),
     }
     return success!(());
@@ -51,14 +50,14 @@ fn compile(mut context: Data, compiler: Data, parents: Data, source_string: Asci
     confirm!(context.set_entry(&keyword!(str, "file"), source_file_data, true));
     confirm!(context.set_entry(&keyword!(str, "directory"), string!(source_directory), true));
 
-    confirm!(print_stage("tokenize", "tokenizing", &build_map, &context));
-    let (token_stream, variant_registry) = confirm!(tokenize(&index_field!(context, "compiler"), source_string, source_file, &None, &build_map, &context));
+    confirm!(print_stage("tokenize", "tokenizing", &compiler, &build_map, &context));
+    let (token_stream, variant_registry) = confirm!(tokenize(&compiler, source_string, source_file, &None, &build_map, &context));
 
-    confirm!(print_stage("parse", "parsing", &build_map, &context));
-    let top = confirm!(parse(&index_field!(context, "compiler"), &variant_registry, &token_stream, &context));
+    confirm!(print_stage("parse", "parsing", &compiler, &build_map, &context));
+    let top = confirm!(parse(&compiler, &variant_registry, &token_stream, &context));
 
-    confirm!(print_stage("build", "building", &build_map, &context));
-    if let Some(build_map) = confirm!(build(&index_field!(context, "compiler"), &top, build_map, &context)) {
+    confirm!(print_stage("build", "building", &compiler, &build_map, &context));
+    if let Some(build_map) = confirm!(build(&compiler, &top, build_map, &context)) {
         return success!(build_map);
     }
 

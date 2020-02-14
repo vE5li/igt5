@@ -40,8 +40,8 @@ pub enum Error {
     InvalidVariadic(Data),
     UnexpectedParameter(Data),
     UnclosedScope,
-    InvalidCompilerMethod(Data),
-    UnexpectedCompilerMethod(Data),
+    InvalidCompilerFunction(Data),
+    UnexpectedCompilerFunction(Data),
     ExpectedLocation,
     ExpectedLocationFound(Data),
     ExpectedImmediate,
@@ -72,7 +72,7 @@ impl Error {
             Error::Tokenizer(errors)                               => return format_hook!(root, build, context, "tokenizer", vector![list!(errors.into_iter().map(|error| string!(error.display(root, build, context))).collect())], "{}", expanded_list(errors)),
             Error::Parser(errors)                                  => return format_hook!(root, build, context, "parser", vector![list!(errors.into_iter().map(|error| string!(error.display(root, build, context))).collect())], "{}", expanded_list(errors)),
             Error::Builder(errors)                                 => return format_hook!(root, build, context, "builder", vector![list!(errors.into_iter().map(|error| string!(error.display(root, build, context))).collect())], "{}", expanded_list(errors)),
-            Error::Execute(method, error)                          => return format_hook!(root, build, context, "call", vector![method, string!(error.display(root, build, context))], "{} :: {}", method.serialize(), error.display(root, build, context)), // DEBUG SERIALIZE
+            Error::Execute(function, error)                        => return format_hook!(root, build, context, "call", vector![function, string!(error.display(root, build, context))], "{} :: {}", function.serialize(), error.display(root, build, context)), // DEBUG SERIALIZE
             Error::Message(message)                                => return format_hook!(root, build, context, "message", vector![message], "{}", extract_string!(&message)),
             Error::InvalidItemCount(specified, received)           => return format_hook!(root, build, context, "invalid_item_count", vector![specified, received], "{} items specified; found {}", extract_integer!(&specified), extract_integer!(&received)),
             Error::InvalidCondition(condition)                     => return format_hook!(root, build, context, "invalid_condition", vector![condition], "invalid condition {}", extract_keyword!(&condition)),
@@ -93,9 +93,9 @@ impl Error {
             Error::InvalidCharacterLength(found)                   => return format_hook!(root, build, context, "invalid_character_length", vector![found], "character \'{}\' may only be one byte in length", extract_string!(&found)),
             Error::InvalidPathLength(found)                        => return format_hook!(root, build, context, "invalid_path_length", vector![found], "path {} needs at least 2 steps", found.serialize()),
             Error::NothingToParse                                  => return format_hook!(root, build, context, "nothing_to_parse", Vector::new(), "nothing to parse"),
-            Error::NoPreviousReturn                                => return format_hook!(root, build, context, "no_previous_return", Vector::new(), "previous method did not return anything"),
+            Error::NoPreviousReturn                                => return format_hook!(root, build, context, "no_previous_return", Vector::new(), "previous function did not return anything"),
             Error::InvalidVariadic(number)                         => return format_hook!(root, build, context, "invalid_variadic", vector![number], "parameter {} may not be variadic (only the last parameter may be variadic)", extract_integer!(&number)),
-            Error::UnexpectedCompilerMethod(method)                => return format_hook!(root, build, context, "unexpected_compiler_method", vector![method], "unexpected compiler method {}", method.serialize()),
+            Error::UnexpectedCompilerFunction(function)            => return format_hook!(root, build, context, "unexpected_compiler_function", vector![function], "unexpected compiler function {}", function.serialize()),
             Error::ExpectedCondition                               => return format_hook!(root, build, context, "expected_condition", Vector::new(), "expected condition"),
             Error::ExpectedConditionFound(found)                   => return format_hook!(root, build, context, "expected_condition_found", vector![found], "expected condition; found {}", found.serialize()), // DEBUG SERIALIZE
             Error::ExpectedParameter(number, expected)             => return format_hook!(root, build, context, "expected_parameter", vector![number, expected], "parameter {} expected {}", extract_integer!(&number), comma_seperated_list(&extract_list!(&expected))),
@@ -103,8 +103,8 @@ impl Error {
             Error::UnexpectedParameter(parameter)                  => return format_hook!(root, build, context, "unexpected_parameter", vector![parameter], "unexpected parameter {}", parameter.serialize()), // DEBUG SERIALIZE (?)
             Error::UnterminatedEscapeSequence                      => return format_hook!(root, build, context, "unterminated_escape_sequence", Vector::new(), "unterminated escape sequence"),
             Error::InvalidEscapeSequence(sequence)                 => return format_hook!(root, build, context, "invalid_escape_sequence", vector![sequence], "invalid escape sequence {}", sequence.serialize()),
-            Error::ExpectedReturn(expected)                        => return format_hook!(root, build, context, "expected_return", vector![expected], "expected method to return {}", comma_seperated_list(&extract_list!(&expected))),
-            Error::ExpectedReturnFound(expected, found)            => return format_hook!(root, build, context, "expected_return_found", vector![expected], "expected method to return {}; found {}", comma_seperated_list(&extract_list!(&expected)), found.serialize()),
+            Error::ExpectedReturn(expected)                        => return format_hook!(root, build, context, "expected_return", vector![expected], "expected function to return {}", comma_seperated_list(&extract_list!(&expected))),
+            Error::ExpectedReturnFound(expected, found)            => return format_hook!(root, build, context, "expected_return_found", vector![expected], "expected function to return {}; found {}", comma_seperated_list(&extract_list!(&expected)), found.serialize()),
             Error::InexplicitOverwrite(selector, previous)         => return format_hook!(root, build, context, "inexplicit_overwrite", vector![selector, previous], "{} has previous value {}", selector.serialize(), previous.serialize()),
             Error::MissingEntry(key)                               => return format_hook!(root, build, context, "missing_entry", vector![key], "missing entry {}", key.serialize()),
             Error::UnclosedScope                                   => return format_hook!(root, build, context, "unclosed_scope", Vector::new(), "unclosed scope"),
@@ -112,7 +112,7 @@ impl Error {
             Error::ExpectedLocationFound(found)                    => return format_hook!(root, build, context, "expected_location_found", vector![found], "expected location; found {}", found.serialize()), // DEBUG SERIALIZE
             Error::ExpectedImmediate                               => return format_hook!(root, build, context, "expected_immediate", Vector::new(), "expected immediate"),
             Error::UnexpectedImmediate(found)                      => return format_hook!(root, build, context, "unexpected_immediate", vector![found], "unexpected immediate {}", found.serialize()), // DEBUG SERIALIZE
-            Error::InvalidCompilerMethod(method)                   => return format_hook!(root, build, context, "invalid_compiler_method", vector![method], "invalid compiler method {}", method.serialize()),
+            Error::InvalidCompilerFunction(function)               => return format_hook!(root, build, context, "invalid_compiler_function", vector![function], "invalid compiler function {}", function.serialize()),
             Error::MissingFile(filename)                           => return format_hook!(root, build, context, "missing_file", vector![filename], "missing file {}", extract_string!(&filename)), // SERIALIZE (?)
             Error::UnterminatedToken(token_type)                   => return format_hook!(root, build, context, "unterminated_token", vector![token_type], "unterminated token {}", extract_identifier!(&token_type)),
             Error::ExpectedBooleanFound(found)                     => return format_hook!(root, build, context, "expected_boolean_found", vector![found], "expected boolean (possible values are true and false); found {}", found.serialize()), // DEBUG SERIALIZE

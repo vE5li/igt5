@@ -81,14 +81,14 @@ macro_rules! display {
 macro_rules! format_hook {
     ($root:expr, $build:expr, $context:expr, $name:expr, $parameters:expr, $($arguments:tt)*) => (
         if let Some(root) = $root {
-            let formatter_method_path = path!(vector![keyword!(str, "method"), keyword!(str, $name)]);
-            let formatter_method = match root.index(&formatter_method_path) {
-                Status::Success(formatter_method) => formatter_method,
+            let formatter_function_path = path!(vector![keyword!(str, "function"), keyword!(str, $name)]);
+            let formatter_function = match root.index(&formatter_function_path) {
+                Status::Success(formatter_function) => formatter_function,
                 Status::Error(error) => panic!("index root failed: {}", error.display($root, $build, $context)),
             };
 
-            if let Some(formatter_method) = formatter_method {
-                match method(&formatter_method, $parameters, &None, root, $build, $context) {
+            if let Some(formatter_function) = formatter_function {
+                match function(&formatter_function, $parameters, &None, root, $build, $context) {
 
                     Status::Success(return_value) => {
                         match return_value {
@@ -152,8 +152,8 @@ macro_rules! error {
     (InvalidVariadic, $number:expr)                                     => (Status::Error(Error::InvalidVariadic($number)));
     (UnexpectedParameter, $instance:expr)                               => (Status::Error(Error::UnexpectedParameter($instance)));
     (UnclosedScope)                                                     => (Status::Error(Error::UnclosedScope));
-    (InvalidCompilerMethod, $method:expr)                               => (Status::Error(Error::InvalidCompilerMethod($method)));
-    (UnexpectedCompilerMethod, $method:expr)                            => (Status::Error(Error::UnexpectedCompilerMethod($method)));
+    (InvalidCompilerFunction, $function:expr)                           => (Status::Error(Error::InvalidCompilerFunction($function)));
+    (UnexpectedCompilerFunction, $function:expr)                        => (Status::Error(Error::UnexpectedCompilerFunction($function)));
     (ExpectedLocation)                                                  => (Status::Error(Error::ExpectedLocation));
     (ExpectedLocationFound, $found:expr)                                => (Status::Error(Error::ExpectedLocationFound($found)));
     (ExpectedImmediate)                                                 => (Status::Error(Error::ExpectedImmediate));

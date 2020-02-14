@@ -65,9 +65,9 @@ fn main() {
     let project_file = project_file.into_inner().unwrap();
     let root = display!(read_map(&AsciiString::from(&project_file)), &None, &build, &context);
 
-    let main_method_path = path!(vector![keyword!(str, "method"), keyword!(str, "main")]);
-    match display!(root.index(&main_method_path), &Some(&root), &build, &context) {
-        Some(main_method) => display!(method(&main_method, parameters, &None, &root, &build, &context), &Some(&root), &build, &context),
-        None => display!(error!(Message, string!(str, "main method not found")), &Some(&root), &build, &context),
+    let main_function_path = path!(vector![keyword!(str, "function"), keyword!(str, "main")]);
+    match display!(root.index(&main_function_path), &Some(&root), &build, &context) {
+        Some(main_function) => display!(function(&main_function, parameters, &None, &root, &build, &context), &Some(&root), &build, &context),
+        None => display!(error!(Message, string!(str, "main function not found")), &Some(&root), &build, &context),
     };
 }

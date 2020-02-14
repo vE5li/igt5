@@ -1,14 +1,14 @@
 @ data points
 #root                   -> global map, only changes when compiling
-#scope                  -> local map, gets created for every method and is removed when the method ends
+#scope                  -> local map, gets created for every function and is removed when the function ends
 #context                -> information about the current state of compilation
 #build                  -> also a global map, this is the data that is returned after calling #compile
-#method                 -> child map of #root, should contain methods
+#function               -> child map of #root, should contain functions
 #template               -> child map of #root, should contain templates
 
 @ project
-#method:#main           -> main method called with parameters
-#method:(error)         -> overwrite error formatter
+#function:#main         -> main function called with parameters
+#function:(error)       -> overwrite error formatter
 
 @ compiler
 #file_settings          -> configure file settings
@@ -22,7 +22,7 @@
 #keyword_tokenizer      -> add a keyword tokenizer
 #identifier_tokenizer   -> add an identifier tokenizer
 #template:#top          -> root template
-#method:(error)         -> overwrite error formatter
+#function:(error)       -> overwrite error formatter
 
 @ context
 #context:parents        -> list of parent modules

@@ -1476,8 +1476,8 @@ impl Data {
                         let mut new_self = confirm!(self.overwrite(&keyword!(str, "pass"), pass));
 
                         for pass_handler_path in unpack_list!(&pass_handlers).into_iter() {
-                            let method_map = index_field!(root, "method");
-                            let pass_handler = index!(&method_map, &pass_handler_path);
+                            let function_map = index_field!(root, "function");
+                            let pass_handler = index!(&function_map, &pass_handler_path);
 
                             let mut parameters = match confirm!(context.index(&keyword!(str, "parameters"))) {
                                 Some(parameters) => unpack_list!(&parameters),
@@ -1485,7 +1485,7 @@ impl Data {
                             };
                             parameters.insert(0, new_self.clone());
 
-                            let last = confirm!(method(&pass_handler, parameters, &Some(current_pass.clone()), root, build, context));
+                            let last = confirm!(function(&pass_handler, parameters, &Some(current_pass.clone()), root, build, context));
                             new_self = expect!(last, Message, string!(str, "pass didnt return a value"));
                         }
 

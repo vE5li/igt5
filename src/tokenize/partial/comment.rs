@@ -70,9 +70,9 @@ impl CommentTokenizer {
                             None => sliced,
                         };
 
-                        let formatter_method_path = path!(vector![keyword!(str, "method"), keyword!(str, "note")]);
-                        match confirm!(root.index(&formatter_method_path)) {
-                            Some(formatter_method) => { confirm!(method(&formatter_method, vector![note_type.clone(), string!(note_message.clone())], current_pass, root, build, context)); }, // TODO:
+                        let formatter_function_path = path!(vector![keyword!(str, "function"), keyword!(str, "note")]);
+                        match confirm!(root.index(&formatter_function_path)) {
+                            Some(formatter_function) => { confirm!(function(&formatter_function, vector![note_type.clone(), string!(note_message.clone())], current_pass, root, build, context)); }, // TODO:
                             None => println!("{}: {}", unpack_identifier!(note_type), note_message),
                         }
                     }
