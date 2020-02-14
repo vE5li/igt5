@@ -104,7 +104,7 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
                 if source.len() >= length {
                     *last = Some(string!(source));
                 } else {
-                    while source.len() > length {
+                    while source.len() < length {
                         source.push_str(&filler);
                     }
                     *last = Some(string!(source));
