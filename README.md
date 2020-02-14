@@ -1,5 +1,5 @@
 # description
-seamonkey is a scripting language designed for building compilers by automating tasks such as tokenizing and parsing.
+Seamonkey is a scripting language designed for building compilers by automating tasks such as tokenizing and parsing.
 
 # build
 Make sure that you have the rust nightly installed on your system. If you don't, you can install it using Rustup with this command:
