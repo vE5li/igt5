@@ -1046,8 +1046,8 @@ impl Data {
             Data::Map(map) => return success!(map!(map.replace(from, to))),
             Data::Path(steps) => return success!(path!(steps.replace(from, to))),
             Data::List(items) => return success!(list!(items.replace(from, to))),
-            Data::String(string) => return success!(keyword!(string.replace(&unpack_literal!(from), &unpack_literal!(to)))),
-            Data::Identifier(identifier) => return success!(keyword!(identifier.replace(&unpack_literal!(from), &unpack_literal!(to)))),
+            Data::String(string) => return success!(string!(string.replace(&unpack_literal!(from), &unpack_literal!(to)))),
+            Data::Identifier(identifier) => return success!(identifier!(identifier.replace(&unpack_literal!(from), &unpack_literal!(to)))),
             Data::Keyword(keyword) => return success!(keyword!(keyword.replace(&unpack_literal!(from), &unpack_literal!(to)))),
             _invalid => return error!(ExpectedFound, expected_list!["container"], self.clone()),
         }
