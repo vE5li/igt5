@@ -1,4 +1,4 @@
-pub use std::alloc::{ Alloc, Layout, Global, handle_alloc_error };
+pub use std::alloc::{ AllocRef, Layout, Global, handle_alloc_error };
 pub use std::ptr::{ NonNull, read, write };
 pub use std::mem;
 
