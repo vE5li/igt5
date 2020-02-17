@@ -96,7 +96,11 @@ impl<'s> DataStack<'s> {
     }
 
     pub fn counted(&mut self, start: i64, end: i64, step: i64, last: &mut Option<Data>, root: &Data, scope: &Data, build: &Data, context: &Data) -> Status<()> {
-        self.flow.push(Flow::For(start - step, end, step, self.index));
+        ensure!(step >= 0, Message, string!(str, "step may not be negative"));
+        match start < end {
+            true => self.flow.push(Flow::For(start - step, end, step, self.index)),
+            false => self.flow.push(Flow::For(start + step, end, -step, self.index)),
+        }
         return self.update(true, last, root, scope, build, context);
     }
 
