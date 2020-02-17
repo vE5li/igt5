@@ -105,7 +105,8 @@ impl<'s> DataStack<'s> {
     }
 
     pub fn condition(&mut self, parameters: Vec<Data>, last: &mut Option<Data>, root: &Data, scope: &Data, build: &Data, context: &Data) -> Status<()> {
-        let (state, _length) = confirm!(DataStack::resolve_condition(&parameters, last));
+        let (state, length) = confirm!(DataStack::resolve_condition(&parameters, last));
+        ensure!(length == parameters.len(), UnexpectedParameter, parameters[length].clone());
         self.flow.push(Flow::Condition(state));
         return self.update(true, last, root, scope, build, context);
     }
@@ -149,7 +150,7 @@ impl<'s> DataStack<'s> {
             None => return error!(Message, string!(str, "condition {} does not exist", condition.serialize())), // TODO:
         };
 
-        if description.width != source.len() {
+        if description.width > source.len() {
             return error!(Message, string!(str, "{} expected {} operants; found {}", condition.serialize(), description.width, source.len())); // TODO:
         }
 

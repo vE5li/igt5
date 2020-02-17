@@ -553,7 +553,11 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
 
             Signature::Slice => *last = Some(confirm!(parameters[0].slice(&parameters[1], &parameters[2]))),
 
-            Signature::Boolean => *last = Some(boolean!(confirm!(DataStack::resolve_condition(&parameters.into_iter().collect(), last)).0)),
+            Signature::Boolean => {
+                let (state, length) = confirm!(DataStack::resolve_condition(&parameters.iter().cloned().collect(), last));
+                ensure!(length == parameters.len(), UnexpectedParameter, parameters[length].clone());
+                *last = Some(boolean!(state));
+            },
 
             Signature::For => confirm!(stack.counted(unpack_integer!(&parameters[0]), unpack_integer!(&parameters[1]), 1, last, root, scope, build, context)),
 
