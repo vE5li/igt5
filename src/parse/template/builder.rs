@@ -29,8 +29,6 @@ pub struct TemplateBuilder<'t> {
 impl<'t> TemplateBuilder<'t> {
 
     pub fn new(token_stream: &'t Vec<Token>, decision_stream: &'t Vector<Decision>, templates: &'t Templates) -> Self {
-        let vec: Vec<Decision> = decision_stream.iter().cloned().collect();
-
         Self {
             token_stream:       token_stream,
             decision_stream:    decision_stream,

@@ -573,7 +573,7 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
 
             Signature::Build => *last = Some(confirm!(build_top(&parameters[0], &parameters[1], context))),
 
-            invalid => panic!(),
+            _invalid => panic!(),
         }
     }
 

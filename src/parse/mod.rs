@@ -14,7 +14,7 @@ pub type Pool = Map<Data, Dependencies>;
 macro_rules! template_matches_piece {
     ($template:expr, $paths:expr, $filters:expr, $parser:expr) => ({
         let mut paths = match $filters.iter().position(| filter | filter == $template) {
-            Some(position) => $paths.clone(),
+            Some(_position) => $paths.clone(),
             None => Vector::new(),
         };
 
@@ -52,13 +52,11 @@ macro_rules! token_matches_piece {
     });
 }
 
-pub fn parse(compiler: &Data, variant_registry: &VariantRegistry, token_stream: &Vec<Token>, context: &Data) -> Status<Data> {
+pub fn parse(compiler: &Data, variant_registry: &VariantRegistry, token_stream: &Vec<Token>) -> Status<Data> {
 
     let parseable_token_stream = token_stream.iter().filter(|token| token.parsable()).cloned().collect();
     let parser = confirm!(Parser::new(compiler, variant_registry, &parseable_token_stream));
     let (decision_stream, templates) = confirm!(parser.parse());
-
-    //println!("{:#?}", decision_stream);
 
     let mut template_builder = TemplateBuilder::new(token_stream, &decision_stream, &templates);
     let (raw_module, _positions) = confirm!(template_builder.build(true));
@@ -392,7 +390,7 @@ impl<'p> Parser<'p> {
 
     fn filtered_paths_from_token(&self, filters: &Vec<Data>, follow: bool, index: usize, processed: &mut Processed) -> MatchResult {
         let mut paths = Vector::new();
-        for (filter_index, filter) in filters.iter().enumerate() {
+        for filter in filters.iter() {
             match follow {
                 true => self.paths_from_token(filter, index, processed).update(&mut paths),
                 false => self.create_widthless(filter, index).update(&mut paths),

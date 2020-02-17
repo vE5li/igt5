@@ -1,4 +1,3 @@
-use std::ptr::NonNull;
 use std::clone::Clone;
 use super::Vector;
 

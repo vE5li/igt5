@@ -286,8 +286,6 @@ impl<'s> DataStack<'s> {
             Signature::Location => source[1].is_location(),
 
             Signature::NotLocation => !source[1].is_location(),
-
-            _other => panic!(),
         };
 
         return success!((state, description.width));

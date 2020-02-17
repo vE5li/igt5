@@ -1,9 +1,8 @@
+use super::node::{ Node, Branch };
 use internal::Compare;
 use std::ptr::NonNull;
 use std::marker::PhantomData;
 use std::clone::Clone;
-use super::node::{ Node, Branch };
-use internal::*;
 
 fn add_to_list<K: Compare + Clone, T: Clone>(branch: &Branch<K, T>, list: &mut Vec<NonNull<Node<K, T>>>) {
     if let Some(node_pointer) = branch.clone() {

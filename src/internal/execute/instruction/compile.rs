@@ -54,7 +54,7 @@ fn compile(mut context: Data, compiler: Data, parents: Data, source_string: Asci
     let (token_stream, variant_registry) = confirm!(tokenize(&compiler, source_string, source_file, &None, &build_map, &context));
 
     confirm!(print_stage("parse", "parsing", &compiler, &build_map, &context));
-    let top = confirm!(parse(&compiler, &variant_registry, &token_stream, &context));
+    let top = confirm!(parse(&compiler, &variant_registry, &token_stream));
 
     confirm!(print_stage("build", "building", &compiler, &build_map, &context));
     if let Some(build_map) = confirm!(build(&compiler, &top, build_map, &context)) {
@@ -136,13 +136,13 @@ pub fn compile_string(parameters: Vec<Data>, context: &Data) -> Status<Data> {
     return compile(context.clone(), compiler, parents, source_string, None, source_directory);
 }
 
-pub fn tokenize_string(compiler: &Data, source: &Data, context: &Data) -> Status<Data> {
+pub fn tokenize_string(_compiler: &Data, _source: &Data, _context: &Data) -> Status<Data> {
     //let token_stream = confirm!(tokenize(&compiler, unpack_string!(source), None, context)).0;
     // serialize token strem
     return success!(boolean!(true));
 }
 
-pub fn parse_token_stream(compiler: &Data, source: &Data, context: &Data) -> Status<Data> {
+pub fn parse_token_stream(_compiler: &Data, _source: &Data, _context: &Data) -> Status<Data> {
     //let token_stream = ???;
     //let variant_registry = ???;
     //let top = confirm!(parse(&compiler, variant_registry, token_stream, context));

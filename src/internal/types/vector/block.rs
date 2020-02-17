@@ -61,7 +61,7 @@ impl<T> BlockList<T> {
                 if length > index * BLOCK_SIZE {
                     block.drop_values(clamped!(length - index * BLOCK_SIZE, BLOCK_SIZE));
                 }
-                deallocate!(self.blocks[index], Block<T>);
+                unsafe { deallocate!(self.blocks[index], Block<T>) };
             }
         }
     }

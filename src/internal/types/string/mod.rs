@@ -2,10 +2,8 @@ mod character;
 
 use internal::*;
 use std::fmt::{ Formatter, Result, Display, Debug };
-use std::cmp::{ PartialOrd, Ord, Ordering };
 use std::ops::{ Index, IndexMut };
 use std::iter::FromIterator;
-use std::fmt;
 
 pub use self::character::Character;
 
@@ -14,6 +12,7 @@ pub struct AsciiString {
     data:       Vector<Character>,
 }
 
+#[allow(dead_code)]
 impl AsciiString {
 
     pub fn new() -> Self {

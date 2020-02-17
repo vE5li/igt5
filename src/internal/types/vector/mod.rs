@@ -18,6 +18,7 @@ pub struct Vector<T> {
     capacity:   usize,
 }
 
+#[allow(dead_code)]
 impl<T: Clone> Vector<T> {
 
     pub fn new() -> Self {
@@ -29,10 +30,12 @@ impl<T: Clone> Vector<T> {
     }
 
     fn append_block_list(&mut self) -> NonNull<BlockList<T>> {
-        let mut block_list = allocate!(BlockList<T>);
-        unsafe { block_list.as_mut().counter = 1 };
-        self.lists.push(block_list);
-        return block_list;
+        unsafe {
+            let mut block_list = allocate!(BlockList<T>);
+            block_list.as_mut().counter = 1;
+            self.lists.push(block_list);
+            return block_list;
+        }
     }
 
     fn append_block(&mut self) -> NonNull<Block<T>> {
@@ -54,7 +57,7 @@ impl<T: Clone> Vector<T> {
     }
 
     fn copy_list(&mut self, list_index: usize) -> NonNull<BlockList<T>> {
-        let mut new_block_list = allocate!(BlockList<T>);
+        let mut new_block_list = unsafe { allocate!(BlockList<T>) };
 
         unsafe {
             new_block_list.as_mut().counter = 1;
@@ -432,14 +435,11 @@ impl<T: Clone> IndexMut<usize> for Vector<T> {
     }
 }
 
-//impl<T: Clone + Debug> Debug for Vector<T> {
-impl<T: Clone> Debug for Vector<T> {
+impl<T: Clone + Debug> Debug for Vector<T> {
 
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        //let string = self.iter().map(|item| format!("{:?}", item)).collect::<Vec<String>>().join(", ");
-        //return write!(f, "[{}]", string);
-
-        return write!(f, "{{ length: {}, capacity: {} ({}), lists: {}}}", self.length, self.capacity * BLOCK_SIZE, self.capacity, self.serialize());
+        let string = self.iter().map(|item| format!("{:?}", item)).collect::<Vec<String>>().join(", ");
+        return write!(f, "[{}]", string);
     }
 }
 
@@ -464,7 +464,7 @@ impl<T> Drop for Vector<T> {
                     false => 0,
                 };
                 list.drop_blocks(capacity, length);
-                deallocate!(list_pointer, BlockList<T>);
+                unsafe { deallocate!(list_pointer, BlockList<T>) };
             }
         }
     }

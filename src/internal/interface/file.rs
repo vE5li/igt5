@@ -53,7 +53,7 @@ pub fn write_map(path: &AsciiString, instance: &Data) -> Status<()> {
             }
             return write_file_raw(path, &string);
         }
-        invalid => return error!(ExpectedFound, expected_list!["map"], instance.clone()),
+        _invalid => return error!(ExpectedFound, expected_list!["map"], instance.clone()),
     }
 }
 

@@ -2,8 +2,6 @@ mod node;
 mod iterator;
 
 use internal::*;
-use std::fmt;
-use super::allocator::*;
 use self::node::{ Node, Branch };
 use std::cmp::PartialEq;
 use std::fmt::{ Formatter, Result, Display, Debug };
@@ -17,6 +15,7 @@ pub struct Map<K: Compare, T> {
     size:       usize,
 }
 
+#[allow(dead_code)]
 impl<K: Compare + Clone, T: Clone> Map<K, T> {
 
     pub fn new() -> Self {
@@ -87,6 +86,7 @@ unsafe impl<K: Compare, T: Send> Send for Map<K, T> {}
 
 unsafe impl<K: Compare, T: Sync> Sync for Map<K, T> {}
 
+#[allow(dead_code)]
 impl<K: Compare + Clone, T: PartialEq + Clone> Map<K, T> {
 
     pub fn contains(&self, compare: &T) -> bool {

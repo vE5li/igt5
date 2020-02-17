@@ -111,7 +111,7 @@ impl<K: Compare + Clone, T: Clone> Node<K, T> {
                 None => node.height = 1 + max(Self::get_height(&node.left), Self::get_height(&node.right)),
             }
         } else {
-            let pointer = allocate!(Node<K, T>);
+            let pointer = unsafe { allocate!(Node<K, T>) };
             let new_node = Node::new(key, value);
             unsafe { write(pointer.as_ptr(), new_node) };
             *branch = Some(pointer);
@@ -159,7 +159,7 @@ impl<K: Compare + Clone, T: Clone> Node<K, T> {
                     let value = node.value.clone();
 
                     if let Some(left_node_pointer) = node.left.clone() {
-                        if let Some(right_node_pointer) = node.right.clone() {
+                        if node.right.is_some() {
                             let successor_branch = Self::smallest_subnote(&mut node.right);
                             if let Some(successor_pointer) = successor_branch {
                                 let successor_node = unsafe { successor_pointer.as_ref() };
@@ -168,15 +168,15 @@ impl<K: Compare + Clone, T: Clone> Node<K, T> {
                             }
                         } else {
                             *branch = Some(left_node_pointer);
-                            deallocate!(copied_node_pointer, Node<K, T>);
+                            unsafe { deallocate!(copied_node_pointer, Node<K, T>) };
                         }
                     } else {
                         if let Some(right_node_pointer) = node.right.clone() {
                             *branch = Some(right_node_pointer);
-                            deallocate!(copied_node_pointer, Node<K, T>);
+                            unsafe { deallocate!(copied_node_pointer, Node<K, T>) };
                         } else {
                             *branch = None;
-                            deallocate!(copied_node_pointer, Node<K, T>);
+                            unsafe { deallocate!(copied_node_pointer, Node<K, T>) };
                             return Some(value);
                         }
                     }
@@ -232,7 +232,7 @@ impl<K: Compare + Clone, T: Clone> Node<K, T> {
     pub fn get_mut<'a>(branch: &mut Branch<K, T>, key: &K) -> Option<&'a mut T> { // make this block the map
         *branch = Self::single_reference(branch.clone());
         if let Some(mut node_pointer) = branch {
-            let mut node = unsafe { node_pointer.as_mut() };
+            let node = unsafe { node_pointer.as_mut() };
             match node.key.compare(&key) {
                 Relation::Bigger => return Self::get_mut(&mut node.left, key),
                 Relation::Smaller => return Self::get_mut(&mut node.right, key),
@@ -250,7 +250,7 @@ impl<K: Compare + Clone, T: Clone> Node<K, T> {
             }
 
             node.counter -= 1;
-            let node_pointer = allocate!(Node<K, T>);
+            let node_pointer = unsafe { allocate!(Node<K, T>) };
             unsafe { write(node_pointer.as_ptr(), node.clone()) };
             return Some(node_pointer);
         }
@@ -288,7 +288,7 @@ impl<K: Compare, T> Node<K, T> {
             if node.counter == 0 {
                 Node::drop(&mut node.left);
                 Node::drop(&mut node.right);
-                deallocate!(node_pointer, Node<K, T>);
+                unsafe { deallocate!(node_pointer, Node<K, T>) };
             }
         }
     }
