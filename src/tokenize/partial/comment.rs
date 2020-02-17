@@ -51,7 +51,7 @@ impl CommentTokenizer {
         });
     }
 
-    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>, error: &mut Option<Error>, current_pass: &Option<AsciiString>, root: &Data, build: &Data, context: &Data) -> Status<bool> {
+    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>, current_pass: &Option<AsciiString>, root: &Data, build: &Data, context: &Data) -> Status<bool> {
         for (start_delimiter, end_delimiter) in self.delimiters.iter() {
             if character_stack.check_string(&start_delimiter) {
                 let mut comment_string = AsciiString::new();

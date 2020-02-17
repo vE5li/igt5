@@ -40,12 +40,12 @@ pub fn tokenize(compiler: &Data, source_string: AsciiString, source_file: Option
     while !character_stack.is_empty() {
         let mut error = None;
         character_stack.start_positions();
-        partial!(&comment_tokenizer, &mut character_stack, &mut token_stream, &mut error, current_pass, compiler, build, context);
+        partial!(&comment_tokenizer, &mut character_stack, &mut token_stream, current_pass, compiler, build, context);
         partial!(&number_tokenizer, &mut character_stack, &mut token_stream, &mut error);
-        partial!(&character_tokenizer, &mut character_stack, &mut token_stream, &mut error);
-        partial!(&string_tokenizer, &mut character_stack, &mut token_stream, &mut error);
-        partial!(&operator_tokenizer, &mut character_stack, &mut token_stream, &mut error);
-        partial!(&keyword_tokenizer, &mut character_stack, &mut token_stream, &mut error);
+        partial!(&character_tokenizer, &mut character_stack, &mut token_stream);
+        partial!(&string_tokenizer, &mut character_stack, &mut token_stream);
+        partial!(&operator_tokenizer, &mut character_stack, &mut token_stream);
+        partial!(&keyword_tokenizer, &mut character_stack, &mut token_stream);
         partial!(&identifier_tokenizer, &mut character_stack, &mut token_stream, &mut error);
         match error {
             Some(error) => return Status::Error(error),

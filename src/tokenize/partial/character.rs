@@ -43,7 +43,7 @@ impl CharacterTokenizer {
         });
     }
 
-    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>, error: &mut Option<Error>) -> Status<bool> {
+    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>) -> Status<bool> {
         if character_stack.check_string(&self.delimiter.0) {
             let mut character = AsciiString::new();
 

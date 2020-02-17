@@ -274,7 +274,7 @@ impl NumberTokenizer {
         return None;
     }
 
-    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>, error: &mut Option<Error>) -> Status<bool> {
+    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>, _error: &mut Option<Error>) -> Status<bool> {
         for (prefix, format) in self.formats.iter() {
             match prefix {
 

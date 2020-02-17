@@ -61,6 +61,7 @@ pub enum Error {
     ExpectedWordFound(Data),
     NonAsciiCharacter,
     InvalidNumberSystem(Data),
+    AmbiguousIdentifier(Data),
 }
 
 impl Error {
@@ -124,6 +125,7 @@ impl Error {
             Error::ExpectedWordFound(found)                        => return format_hook!(root, build, context, "expected_word_found", vector![found], "expected word; found {}", found.serialize()), // DEBUG SERIALIZE (?)
             Error::NonAsciiCharacter                               => return format_hook!(root, build, context, "non_ascii_character", Vector::new(), "invalid non-ascii character"),
             Error::InvalidNumberSystem(system)                     => return format_hook!(root, build, context, "invalid_number_system", vector![system], "invalid number system {}", extract_identifier!(system)),
+            Error::AmbiguousIdentifier(identifier)                 => return format_hook!(root, build, context, "ambiguous_identifier", vector![identifier], "ambiguous identifier {}; could be identifier and type identifier", extract_identifier!(identifier)),
         }
     }
 }

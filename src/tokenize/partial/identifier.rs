@@ -73,6 +73,7 @@ impl IdentifierTokenizer {
 
                     Action::Map(variant) => {
                         match variant.printable().as_str() {
+
                             "identifier" => {
                                 if self.doubles.contains(&matched) {
                                     buffer = buffer.chars().skip(matched.len()).cloned().collect();
@@ -82,6 +83,7 @@ impl IdentifierTokenizer {
                                 character_stack.drop();
                                 return success!(true);
                             },
+
                             "type_identifier" => {
                                 if self.doubles.contains(&matched) {
                                     buffer = buffer.chars().skip(matched.len()).cloned().collect();
@@ -91,7 +93,8 @@ impl IdentifierTokenizer {
                                 character_stack.drop();
                                 return success!(true);
                             },
-                            _ => panic!("invalid identifier map"),
+
+                            _invalid => panic!(),
                         }
                     },
 
@@ -103,7 +106,9 @@ impl IdentifierTokenizer {
                     },
                 }
             } else {
-                // if word != buffer error -> not decided
+                if word != buffer {
+                    *error = Some(Error::AmbiguousIdentifier(string!(buffer)));
+                }
                 break;
             }
         }

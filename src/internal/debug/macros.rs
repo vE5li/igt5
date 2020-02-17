@@ -1,5 +1,3 @@
-use internal::*;
-
 macro_rules! success {
     ($content:expr) => (Status::Success($content));
 }
@@ -173,6 +171,7 @@ macro_rules! error {
     (ExpectedWordFound, $found:expr)                                    => (Status::Error(Error::ExpectedWordFound($found)));
     (NonAsciiCharacter)                                                 => (Status::Error(Error::NonAsciiCharacter));
     (InvalidNumberSystem, $system:expr)                                 => (Status::Error(Error::InvalidNumberSystem($system)));
+    (AmbiguousIdentifier, $identifier:expr)                             => (Status::Error(Error::AmbiguousIdentifier($identifier)));
 }
 
 macro_rules! set_entry {

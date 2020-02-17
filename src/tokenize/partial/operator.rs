@@ -49,7 +49,7 @@ impl OperatorTokenizer {
         });
     }
 
-    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>, error: &mut Option<Error>) -> Status<bool> {
+    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>) -> Status<bool> {
         if let Some((matched, action)) = self.rules.check_stack(character_stack) {
             match action {
 

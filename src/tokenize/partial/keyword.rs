@@ -43,7 +43,7 @@ impl KeywordTokenizer {
         });
     }
 
-    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>, error: &mut Option<Error>) -> Status<bool> {
+    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>) -> Status<bool> {
         character_stack.save();
 
         let word = confirm!(character_stack.till_breaking());
