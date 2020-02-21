@@ -334,9 +334,15 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
                 *last = None; // dont change (?)
             }
 
-            Signature::Set => { // parameters like for map instruction?
-                set_entry!(scope, &parameters[0], parameters[1].clone(), true);
-                *last = Some(parameters[1].clone());
+            Signature::Set => {
+                let mut iterator = parameters.iter();
+                let mut index = 2;
+                while let Some(key) = iterator.next() {
+                    let value = expect!(iterator.next(), ExpectedParameter, integer!(index), expected_list!["instance"]);
+                    set_entry!(scope, key, value.clone(), true);
+                    index += 2;
+                }
+                *last = None;
             }
 
             Signature::Serialize => *last = Some(string!(parameters[0].serialize())),
