@@ -11,7 +11,7 @@
         #set            [ #data entry ] [ #last:instance ]
 
         @ test positive condition
-        #insert         [ #scope:entry:parameters ] [ #data 1 ] [ #scope:entry:condition ]
+        #push           [ #scope:entry:parameters ] [ #scope:entry:condition ]
         #invoke         [ #data #boolean ] [ #last ]
         #if             [ #data #not_equals ] [ #last ] [ #scope:entry:expected ]
         #serialize      [ #last ]
@@ -20,7 +20,7 @@
 
         @ test inverse condition
         #keyword        [ #data not_ ] [ #scope:entry:condition ]
-        #insert         [ #scope:entry:parameters ] [ #data 1 ] [ #last ]
+        #push           [ #scope:entry:parameters ] [ #last ]
         #invoke         [ #data #boolean ] [ #last ]
         #if             [ #data #equals ] [ #last ] [ #scope:entry:expected ]
         #serialize      [ #last ]
