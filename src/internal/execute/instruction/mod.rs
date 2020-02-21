@@ -529,6 +529,17 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
                 *last = Some(merged);
             }
 
+            Signature::Move => {
+                let item = confirm!(parameters[0].index(&parameters[1]));
+                let item = expect!(item, Message, string!(str, "missing entry {}", parameters[1].serialize()));
+                let new_container = confirm!(parameters[0].remove(&parameters[1]));
+                *last = Some(confirm!(new_container.insert(&parameters[2], item)));
+            }
+
+            Signature::Push => *last = Some(confirm!(parameters[0].insert(&integer!(1), parameters[1].clone()))),
+
+            Signature::Append => *last = Some(confirm!(parameters[0].insert(&integer!(-1), parameters[1].clone()))),
+
             Signature::Remove => *last = Some(confirm!(parameters[0].remove(&parameters[1]))),
 
             Signature::Index => {

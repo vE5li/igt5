@@ -90,7 +90,10 @@ lazy_static! {
         push_description!(map, "lowercase",     Lowercase,      true,   false,  true,   InstructionParameter::new(Some(vec![ParameterType::Literal])));
         push_description!(map, "insert",        Insert,         true,   false,  false,  InstructionParameter::new(Some(vec![ParameterType::Container])), InstructionParameter::new(Some(vec![ParameterType::Selector])), InstructionParameter::new(None));
         push_description!(map, "overwrite",     Overwrite,      true,   false,  false,  InstructionParameter::new(Some(vec![ParameterType::Container])), InstructionParameter::new(Some(vec![ParameterType::Selector])), InstructionParameter::new(None));
-        push_description!(map, "remove",        Remove,         true,   false,  false,  InstructionParameter::new(Some(vec![ParameterType::Container])), InstructionParameter::new(Some(vec![ParameterType::Selector]))); // remove old value aswell (?)
+        push_description!(map, "move",          Move,           true,   false,  false,  InstructionParameter::new(Some(vec![ParameterType::Container])), InstructionParameter::new(Some(vec![ParameterType::Selector])), InstructionParameter::new(Some(vec![ParameterType::Selector])));
+        push_description!(map, "push",          Push,           true,   false,  false,  InstructionParameter::new(Some(vec![ParameterType::Container])), InstructionParameter::new(None));
+        push_description!(map, "append",        Append,         true,   false,  false,  InstructionParameter::new(Some(vec![ParameterType::Container])), InstructionParameter::new(None));
+        push_description!(map, "remove",        Remove,         true,   false,  false,  InstructionParameter::new(Some(vec![ParameterType::Container])), InstructionParameter::new(Some(vec![ParameterType::Selector])));
         push_description!(map, "system",        System,         true,   false,  true,   InstructionParameter::new(Some(vec![ParameterType::String])), InstructionParameter::new(Some(vec![ParameterType::String])));
         push_description!(map, "silent",        Silent,         true,   false,  true,   InstructionParameter::new(Some(vec![ParameterType::String])), InstructionParameter::new(Some(vec![ParameterType::String])));
         push_description!(map, "keys",          Keys,           true,   false,  false,  InstructionParameter::new(Some(vec![ParameterType::Map])));

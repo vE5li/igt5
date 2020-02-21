@@ -955,6 +955,87 @@ test [
         expected #keyword
     }
 
+    @ move
+    {
+        instruction #move
+        parameters [ { old value } old new ]
+        expected { new value }
+    }
+
+    @ push
+    {
+        instruction #push
+        parameters [ [ ] 6 ]
+        expected [ 6 ]
+    }
+    {
+        instruction #push
+        parameters [ [ 7 ] 6 ]
+        expected [ 6 7 ]
+    }
+    {
+        instruction #push
+        parameters [ some:path prefix ]
+        expected prefix:some:path
+    }
+    {
+        instruction #push
+        parameters [ "" 'c' ]
+        expected "c"
+    }
+    {
+        instruction #push
+        parameters [ "ing" "str" ]
+        expected "string"
+    }
+    {
+        instruction #push
+        parameters [ tifier iden ]
+        expected identifier
+    }
+    {
+        instruction #push
+        parameters [ #word #key ]
+        expected #keyword
+    }
+
+    @ append
+    {
+        instruction #append
+        parameters [ [ ] 6 ]
+        expected [ 6 ]
+    }
+    {
+        instruction #append
+        parameters [ [ 5 ] 6 ]
+        expected [ 5 6 ]
+    }
+    {
+        instruction #append
+        parameters [ some:path suffix ]
+        expected some:path:suffix
+    }
+    {
+        instruction #append
+        parameters [ "" 'c' ]
+        expected "c"
+    }
+    {
+        instruction #append
+        parameters [ "str" "ing" ]
+        expected "string"
+    }
+    {
+        instruction #append
+        parameters [ iden tifier ]
+        expected identifier
+    }
+    {
+        instruction #append
+        parameters [ #key #word ]
+        expected #keyword
+    }
+
     @ remove
     {
         instruction #remove

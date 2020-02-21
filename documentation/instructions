@@ -55,6 +55,9 @@
 #lowercase          -> takes a literal and returns the same literal in lowercase characters
 #insert             ->
 #overwrite          ->
+#move               ->
+#push               ->
+#append             ->
 #remove             ->
 #system             ->
 #silent             ->
