@@ -186,6 +186,46 @@ test [
         parameters [ { } !true ]
         expected !false
     }
+    {
+        condition #present
+        parameters [ [ ] 1 ]
+        expected !false
+    }
+    {
+        condition #present
+        parameters [ [ 6 ] 1 ]
+        expected !true
+    }
+    {
+        condition #present
+        parameters [ "" -1 ]
+        expected !false
+    }
+    {
+        condition #present
+        parameters [ "string" -1 ]
+        expected !true
+    }
+    {
+        condition #present
+        parameters [ id 3 ]
+        expected !false
+    }
+    {
+        condition #present
+        parameters [ identifier 3 ]
+        expected !true
+    }
+    {
+        condition #present
+        parameters [ #keyword -8 ]
+        expected !false
+    }
+    {
+        condition #present
+        parameters [ #keyword -5 ]
+        expected !true
+    }
 
     @ bigger
     {
