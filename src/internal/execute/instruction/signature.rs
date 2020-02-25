@@ -13,7 +13,6 @@ pub enum Signature {
     Type,
     Length,
     Time,
-    Flush,
     Input,
     Shell,
     Terminate,

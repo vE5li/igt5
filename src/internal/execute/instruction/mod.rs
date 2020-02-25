@@ -133,12 +133,6 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
                 *last = Some(integer!(elapsed.as_millis() as i64));
             }
 
-            Signature::Flush => {
-                use std::io::{ Write, stdout };
-                stdout().flush().ok().expect("failed to flush stdout");
-                *last = None;
-            }
-
             Signature::Input => {
                 let mut line = String::new();
                 match std::io::stdin().read_line(&mut line) {
@@ -177,9 +171,11 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
             }
 
             Signature::Print => {
+                use std::io::{ Write, stdout };
                 for parameter in parameters {
                     print!("{}", parameter.to_string().printable());
                 }
+                stdout().flush().ok().expect("failed to flush stdout");
             }
 
             Signature::Absolute => *last = Some(confirm!(parameters[0].absolute())),
