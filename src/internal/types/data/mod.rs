@@ -142,13 +142,6 @@ impl Data {
                 }
             },
 
-            Data::Path(steps) => {
-                match source {
-                    Data::Path(source_steps) => return success!(path!(steps.iter().cloned().chain(source_steps.iter().cloned()).collect())),
-                    _other => return error!(ExpectedFound, expected_list!["path"], source.clone()),
-                }
-            },
-
             Data::List(items) => {
                 match source {
                     Data::List(source_items) => return success!(list!(items.iter().cloned().chain(source_items.iter().cloned()).collect())),
@@ -156,29 +149,8 @@ impl Data {
                 }
             },
 
-            Data::String(string) => {
-                match source {
-                    Data::String(source_string) => return success!(string!(str, "{}{}", string, source_string)),
-                    _other => return error!(ExpectedFound, expected_list!["string"], source.clone()),
-                }
-            },
-
-            Data::Identifier(identifier) => {
-                match source {
-                    Data::Identifier(source_identifier) => return success!(identifier!(str, "{}{}", identifier, source_identifier)),
-                    _other => return error!(ExpectedFound, expected_list!["identifier"], source.clone()),
-                }
-            },
-
-            Data::Keyword(keyword) => {
-                match source {
-                    Data::Keyword(source_keyword) => return success!(keyword!(str, "{}{}", keyword, source_keyword)),
-                    _other => return error!(ExpectedFound, expected_list!["keyword"], source.clone()),
-                }
-            },
-
-            _other => {
-                ensure!(self == source, Message, string!(str, "conflictig values for merge"));
+            other => {
+                ensure!(other == source, Message, string!(str, "conflictig values for merge"));
                 return success!(self.clone());
             },
         }
