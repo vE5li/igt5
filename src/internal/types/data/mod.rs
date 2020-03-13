@@ -130,7 +130,10 @@ impl Data {
                         let mut data_map = data_map.clone();
                         for (source_key, source_value) in source_data_map.iter() {
                             if let Some(value) = data_map.get(source_key) {
-                                let new_value = confirm!(value.merge(&source_value));
+                                let new_value = match value == source_value {
+                                    true => value.clone(),
+                                    false => confirm!(value.merge(&source_value)),
+                                };
                                 data_map.insert(source_key.clone(), new_value);
                                 continue;
                             }
