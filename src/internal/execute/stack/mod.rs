@@ -71,7 +71,7 @@ impl<'s> DataStack<'s> {
             iterators.push(map!(map));
         }
 
-        if iterators.is_empty() { // dirty workarround
+        if iterators.is_empty() { // FIX: dirty workarround
             confirm!(self.skip_condition(false));
             self.advance(1);
             return self.skip_parameters();
@@ -91,6 +91,16 @@ impl<'s> DataStack<'s> {
                 break;
             }
         }
+
+        let mut source_stack = DataStack::new(&source); // FIX: dirty workarround
+        let description = (*INSTRUCTIONS).get("while").unwrap();
+        let extracted = confirm!(InstructionParameter::validate(&confirm!(source_stack.parameters(&last, root, &scope, build, context)), &description.parameters, description.variadic));
+        if !confirm!(DataStack::resolve_condition(&extracted, last)).0 {
+            confirm!(self.skip_condition(false));
+            self.advance(1);
+            return self.skip_parameters();
+        }
+
         self.flow.push(Flow::While(source, last.clone(), self.index));
         return self.update(true, last, root, scope, build, context);
     }
@@ -493,7 +503,12 @@ impl<'s> DataStack<'s> {
             ensure_empty!(parameter_stack, UnexpectedImmediate);
             if let Data::Path(mut steps) = location {
                 steps.remove(0);
-                let selector = path!(steps);
+
+                let selector = match steps.len() {
+                    1 => steps.remove(0),
+                    _other => path!(steps),
+                };
+
                 match confirm!(start.index(&selector)) {
                     Some(instance) => parameters.push(instance),
                     None => return error!(MissingEntry, selector), // THESE NEED CHANGE
