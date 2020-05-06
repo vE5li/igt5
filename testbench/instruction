@@ -1388,31 +1388,6 @@ test [
         parameters [ [ 1 2 ] [ 3 4 ] ]
         expected [ 1 2 3 4 ]
     }
-    {
-        instruction #merge
-        parameters [ some:test some:path ]
-        expected some:test:some:path
-    }
-    {
-        instruction #merge
-        parameters [ "" "" ]
-        expected ""
-    }
-    {
-        instruction #merge
-        parameters [ "str" "ing" ]
-        expected "string"
-    }
-    {
-        instruction #merge
-        parameters [ ident ifier ]
-        expected identifier
-    }
-    {
-        instruction #merge
-        parameters [ #key #word ]
-        expected #keyword
-    }
 
     @ slice
     {
