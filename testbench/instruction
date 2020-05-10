@@ -4,17 +4,17 @@
 
         @ get initial time
         #time
-        #set            [ #data start_time ] [ #last ]
+        #modify         [ #data #scope:start_time ] [ #last ]
 
         @ iterate all tests
         #iterate        [ #root:test ]
-        #set            [ #data entry ] [ #last:instance ]
+        #modify         [ #data #scope:entry ] [ #last:instance ]
 
         @ test positive condition
         #invoke         [ #scope:entry:instruction ] [ #scope:entry:parameters ]
         #if             [ #data #not_equals ] [ #last ] [ #scope:entry:expected ]
         #serialize      [ #last ]
-        #set            [ #data found ] [ #last ]
+        #modify         [ #data #scope:found ] [ #last ]
         #serialize      [ #scope:entry:expected ]
         #print_line     [ #data "[ testbench ] instruction #" ] [ #scope:entry:instruction ] [ #data " with parameters " ] [ #scope:entry:parameters ] [ #data " expected " ] [ #last ] [ #data " but found " ] [ #scope:found ]
         #end

@@ -174,10 +174,6 @@ macro_rules! error {
     (AmbiguousIdentifier, $identifier:expr)                             => (Status::Error(Error::AmbiguousIdentifier($identifier)));
 }
 
-macro_rules! set_entry {
-    ($instance:expr, $key:expr, $data:expr, $overwrite:expr) => (unsafe { confirm!((*($instance as *const Data as *mut Data)).set_entry($key, $data, $overwrite)); });
-}
-
 macro_rules! boolean_to_string {
     ($boolean:expr) => (
         match $boolean {

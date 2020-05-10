@@ -73,7 +73,6 @@
 #read_list          ->
 #write_list         ->
 #modify             ->
-#set                ->
 #call               ->
 #call_list          ->
 #invoke             ->

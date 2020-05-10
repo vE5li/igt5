@@ -74,7 +74,6 @@ pub enum Signature {
     ReadList,
     WriteList,
     Modify,
-    Set,
     Call,
     CallList,
     Invoke,

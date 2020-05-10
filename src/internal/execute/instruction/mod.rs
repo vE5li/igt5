@@ -288,54 +288,51 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
             }
 
             Signature::Modify => {
-                match &parameters[0] {
-                    Data::Keyword(index) => {
-                        match index.printable().as_str() {
-
-                            "root" => confirm!(root.modify(None, parameters[1].clone())),
-
-                            "scope" => confirm!(scope.modify(None, parameters[1].clone())),
-
-                            "context" => confirm!(context.modify(None, parameters[1].clone())),
-
-                            "build" => confirm!(build.modify(None, parameters[1].clone())),
-
-                            "function" => confirm!(root.modify(Some(&parameters[0]), parameters[1].clone())),
-
-                            "template" => confirm!(root.modify(Some(&parameters[0]), parameters[1].clone())),
-
-                            other => return error!(Message, string!(str, "invalid scope for modify {}", other)),
-                        }
-                    },
-                    Data::Path(steps) => {
-                        match extract_keyword!(&steps[0]).printable().as_str() {
-
-                            "root" => confirm!(root.modify(Some(&path!(steps.iter().skip(1).cloned().collect())), parameters[1].clone())),
-
-                            "scope" => confirm!(scope.modify(Some(&path!(steps.iter().skip(1).cloned().collect())), parameters[1].clone())),
-
-                            "context" => confirm!(context.modify(Some(&path!(steps.iter().skip(1).cloned().collect())), parameters[1].clone())),
-
-                            "build" => confirm!(build.modify(Some(&path!(steps.iter().skip(1).cloned().collect())), parameters[1].clone())),
-
-                            "function" => confirm!(root.modify(Some(&parameters[0]), parameters[1].clone())),
-
-                            "template" => confirm!(root.modify(Some(&parameters[0]), parameters[1].clone())),
-
-                            other => return error!(Message, string!(str, "invalid scope for modify {}", other)),
-                        }
-                    },
-                    _other => return error!(Message, string!(str, "only key or path are valid")),
-                }
-                *last = None; // dont change (?)
-            }
-
-            Signature::Set => {
                 let mut iterator = parameters.iter();
-                let mut index = 2;
+                let mut index = 0;
                 while let Some(key) = iterator.next() {
-                    let value = expect!(iterator.next(), ExpectedParameter, integer!(index), expected_list!["instance"]);
-                    set_entry!(scope, key, value.clone(), true);
+                    let value = expect!(iterator.next(), ExpectedParameter, integer!(index + 2), expected_list!["instance"]);
+
+                    match key {
+                        Data::Keyword(index) => {
+                            match index.printable().as_str() {
+
+                                "root" => confirm!(root.modify(None, value.clone())),
+
+                                "scope" => confirm!(scope.modify(None, value.clone())),
+
+                                "context" => confirm!(context.modify(None, value.clone())),
+
+                                "build" => confirm!(build.modify(None, value.clone())),
+
+                                "function" => confirm!(root.modify(Some(key), value.clone())),
+
+                                "template" => confirm!(root.modify(Some(key), value.clone())),
+
+                                other => return error!(Message, string!(str, "invalid scope for modify {}", other)),
+                            }
+                        },
+                        Data::Path(steps) => {
+                            match extract_keyword!(&steps[0]).printable().as_str() {
+
+                                "root" => confirm!(root.modify(Some(&path!(steps.iter().skip(1).cloned().collect())), value.clone())),
+
+                                "scope" => confirm!(scope.modify(Some(&path!(steps.iter().skip(1).cloned().collect())), value.clone())),
+
+                                "context" => confirm!(context.modify(Some(&path!(steps.iter().skip(1).cloned().collect())), value.clone())),
+
+                                "build" => confirm!(build.modify(Some(&path!(steps.iter().skip(1).cloned().collect())), value.clone())),
+
+                                "function" => confirm!(root.modify(Some(key), value.clone())),
+
+                                "template" => confirm!(root.modify(Some(key), value.clone())),
+
+                                other => return error!(Message, string!(str, "invalid scope for modify {}", other)),
+                            }
+                        },
+                        _other => return error!(Message, string!(str, "only key or path are valid")),
+                    }
+
                     index += 2;
                 }
                 *last = None;

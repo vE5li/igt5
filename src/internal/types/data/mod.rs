@@ -767,7 +767,7 @@ impl Data {
         }
     }
 
-    pub fn index_reference(&self, selector: &Data, mutable: bool) -> Status<IndexResult> {
+    pub fn index_reference(&self, selector: &Data, mutable: bool, create: bool) -> Status<IndexResult> {
         let mut_self = self as *const Data as *mut Data;
         match unsafe { &mut *mut_self } {
 
@@ -777,7 +777,7 @@ impl Data {
                     Data::Path(steps) => {
                         let mut last = self as *const Data;
                         for (step_index, step) in steps.iter().enumerate() {
-                            match unsafe { confirm!((*last).index_reference(&step, mutable)) } {
+                            match unsafe { confirm!((*last).index_reference(&step, mutable, create && step_index == steps.len() - 1)) } {
                                 IndexResult::Reference(reference) => last = reference,
                                 IndexResult::Literal(reference, index) => {
                                     ensure!(step_index == steps.len() - 1, Message, string!(str, "cannot index a character"));
@@ -791,16 +791,22 @@ impl Data {
 
                     _other => {
                         if mutable {
-                            match map.get_mut(selector) {
-                                Some(entry) => return success!(IndexResult::Reference(entry as *const Data)),
-                                None => return success!(IndexResult::Missed),
+                            if let Some(entry) = map.get_mut(selector) {
+                                return success!(IndexResult::Reference(entry as *const Data));
                             }
                         } else {
-                            match map.get(selector) {
-                                Some(entry) => return success!(IndexResult::Reference(entry as *const Data)),
-                                None => return success!(IndexResult::Missed),
+                            if let Some(entry) = map.get(selector) {
+                                return success!(IndexResult::Reference(entry as *const Data));
                             }
                         }
+
+                        if create {
+                            map.insert(selector.clone(), integer!(0));
+                            let entry = map.get_mut(selector).unwrap();
+                            return success!(IndexResult::Reference(entry as *const Data));
+                        }
+
+                        return success!(IndexResult::Missed);
                     },
                 }
             },
@@ -811,7 +817,7 @@ impl Data {
                     Data::Path(steps) => {
                         let mut last = self as *const Data;
                         for (step_index, step) in steps.iter().enumerate() {
-                            match unsafe { confirm!((*last).index_reference(&step, mutable)) } {
+                            match unsafe { confirm!((*last).index_reference(&step, mutable, create && step_index == steps.len() - 1)) } {
                                 IndexResult::Reference(reference) => last = reference,
                                 IndexResult::Literal(reference, index) => {
                                     ensure!(step_index == steps.len() - 1, Message, string!(str, "cannot index a character"));
@@ -824,6 +830,15 @@ impl Data {
                     },
 
                     _other => {
+                        if create {
+                            if let Some(index) = confirm!(Data::wrapped_index(selector, items.len() + 1)) {
+                                if index == items.len() {
+                                    items.push(integer!(0));
+                                    return success!(IndexResult::Reference(items.index_mut(index) as *const Data));
+                                }
+                            }
+                        }
+
                         if mutable {
                             match confirm!(Data::wrapped_index(selector, items.len())) {
                                 Some(selector) => return success!(IndexResult::Reference(items.index_mut(selector) as *const Data)),
@@ -845,7 +860,7 @@ impl Data {
                     Data::Path(steps) => {
                         let mut last = self as *const Data;
                         for (step_index, step) in steps.iter().enumerate() {
-                            match unsafe { confirm!((*last).index_reference(&step, mutable)) } {
+                            match unsafe { confirm!((*last).index_reference(&step, mutable, create && step_index == steps.len() - 1)) } {
                                 IndexResult::Reference(reference) => last = reference,
                                 IndexResult::Literal(reference, index) => {
                                     ensure!(step_index == steps.len() - 1, Message, string!(str, "cannot index a character"));
@@ -858,6 +873,15 @@ impl Data {
                     },
 
                     _other => {
+                        if create {
+                            if let Some(index) = confirm!(Data::wrapped_index(selector, steps.len() + 1)) {
+                                if index == steps.len() {
+                                    steps.push(integer!(0));
+                                    return success!(IndexResult::Reference(steps.index_mut(index) as *const Data));
+                                }
+                            }
+                        }
+
                         if mutable {
                             match confirm!(Data::wrapped_index(selector, steps.len())) {
                                 Some(selector) => return success!(IndexResult::Reference(steps.index_mut(selector) as *const Data)),
@@ -874,6 +898,15 @@ impl Data {
             }
 
             Data::String(string) => {
+                if create {
+                    if let Some(index) = confirm!(Data::wrapped_index(selector, string.len() + 1)) {
+                        if index == string.len() {
+                            string.push(Character::from_code(0));
+                            return success!(IndexResult::Literal(self as *const Data, index));
+                        }
+                    }
+                }
+
                 match confirm!(Data::wrapped_index(selector, string.len())) {
                     Some(selector) => return success!(IndexResult::Literal(self as *const Data, selector)),
                     None => return success!(IndexResult::Missed),
@@ -881,6 +914,15 @@ impl Data {
             }
 
             Data::Identifier(identifier) => {
+                if create {
+                    if let Some(index) = confirm!(Data::wrapped_index(selector, identifier.len() + 1)) {
+                        if index == identifier.len() {
+                            identifier.push(Character::from_code(0));
+                            return success!(IndexResult::Literal(self as *const Data, index));
+                        }
+                    }
+                }
+
                 match confirm!(Data::wrapped_index(selector, identifier.len())) {
                     Some(selector) => return success!(IndexResult::Literal(self as *const Data, selector)),
                     None => return success!(IndexResult::Missed),
@@ -888,6 +930,15 @@ impl Data {
             }
 
             Data::Keyword(keyword) => {
+                if create {
+                    if let Some(index) = confirm!(Data::wrapped_index(selector, keyword.len() + 1)) {
+                        if index == keyword.len() {
+                            keyword.push(Character::from_code(0));
+                            return success!(IndexResult::Literal(self as *const Data, index));
+                        }
+                    }
+                }
+
                 match confirm!(Data::wrapped_index(selector, keyword.len())) {
                     Some(selector) => return success!(IndexResult::Literal(self as *const Data, selector)),
                     None => return success!(IndexResult::Missed),
@@ -900,7 +951,7 @@ impl Data {
 
     pub fn index(&self, selector: &Data) -> Status<Option<Data>> {
         unsafe {
-            match confirm!(self.index_reference(selector, false)) {
+            match confirm!(self.index_reference(selector, false, false)) {
                 IndexResult::Reference(reference) => return success!(Some((*reference).clone())),
                 IndexResult::Literal(reference, index) => {
                     match &*reference {
@@ -1316,7 +1367,7 @@ impl Data {
 
     pub fn modify(&self, path: Option<&Data>, data: Data) -> Status<()> {
         if let Some(path) = path {
-            match confirm!(self.index_reference(path, true)) {
+            match confirm!(self.index_reference(path, true, true)) {
 
                 IndexResult::Reference(reference) => {
                     let reference = reference as *mut Data;
@@ -1328,8 +1379,8 @@ impl Data {
                     let new_value = unpack_character!(&data);
                     let reference = reference as *mut Data;
                     match unsafe { &mut *reference } {
-                        Data::Keyword(keyword) => keyword[index] = new_value,
-                        Data::Identifier(identifier) => identifier[index] = new_value,
+                        Data::Keyword(keyword) => keyword[index] = new_value, // MAKE SURE THIS IS PURE
+                        Data::Identifier(identifier) => identifier[index] = new_value, // MAKE SURE THIS IS PURE
                         Data::String(string) => string[index] = new_value,
                         _invalid => panic!(),
                     }
