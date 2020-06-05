@@ -158,7 +158,7 @@ pub fn parse_data(character_stack: &mut CharacterStack) -> Status<Data> {
                 return success!(confirm!(check_path(character_stack, string!(string))));
             },
 
-            '!' => {
+            '$' => {
                 character_stack.advance(1);
                 let word = confirm!(character_stack.till_breaking());
                 match word.printable().as_str() {
