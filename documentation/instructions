@@ -10,6 +10,7 @@
 #boolean            ->
 #type               -> takes an instance and returns its type as a keyword
 #length             ->
+#random             -> return a random value anywhere in the range from the first to the second parameter
 #time               -> returns time passed since start of compiling as milliseconds
 #flush              -> flushes stdout
 #input              -> returns a single line of user input as a string

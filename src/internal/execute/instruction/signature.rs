@@ -12,6 +12,7 @@ pub enum Signature {
     Boolean,
     Type,
     Length,
+    Random,
     Time,
     Input,
     Shell,

@@ -15,6 +15,7 @@ use self::compile::*;
 use self::shell::shell;
 use self::signature::Signature;
 use std::process::{ Command, Stdio };
+use rand::Rng;
 
 macro_rules! reduce_list {
     ($parameters:expr, $function:ident) => ({
@@ -124,6 +125,14 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
                     }
                     *last = Some(string!(source));
                 }
+            }
+
+            Signature::Random => {
+                let mut generator = rand::thread_rng();
+                let smallest = unpack_number!(&parameters[0]) as i64;
+                let biggest = unpack_number!(&parameters[1]) as i64;
+                ensure!(smallest <= biggest, Message, string!(str, "first parameter must be smaller or equal to the second one"));
+                *last = Some(integer!(generator.gen_range(smallest, biggest + 1)));
             }
 
             Signature::Time => {
