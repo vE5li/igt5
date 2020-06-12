@@ -9,7 +9,7 @@ pub fn serialize_float(value: f64) -> VectorString {
 }
 
 pub fn serialize_literal(source: &VectorString, delimiter: char) -> VectorString {
-    return format_ascii!("{}{}{}", delimiter, source.serialize(), delimiter);
+    return format_vector!("{}{}{}", delimiter, source.serialize(), delimiter);
 }
 
 pub fn serialize_map(source: &DataMap) -> VectorString {

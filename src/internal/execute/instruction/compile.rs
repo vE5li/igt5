@@ -22,7 +22,7 @@ fn find_source_file(compiler: &Data, source_directory: &mut VectorString, module
     let extention = unpack_string!(&extention);
 
     if let Some(submodule_file) = confirm!(file_settings.index(&keyword!(str, "submodule"))) {
-        let submodule_source_file = format_ascii!("{}{}/{}.{}", source_directory, module_name, unpack_string!(&submodule_file), extention);
+        let submodule_source_file = format_vector!("{}{}/{}.{}", source_directory, module_name, unpack_string!(&submodule_file), extention);
         if Path::new(&submodule_source_file.printable()).exists() {
             source_directory.push_str(module_name);
             source_directory.push(Character::from_char('/'));
@@ -30,7 +30,7 @@ fn find_source_file(compiler: &Data, source_directory: &mut VectorString, module
         }
     }
 
-    let source_file = format_ascii!("{}{}.{}", source_directory, module_name, extention);
+    let source_file = format_vector!("{}{}.{}", source_directory, module_name, extention);
     ensure!(Path::new(&source_file.printable()).exists(), MissingFile, string!(source_file));
     return success!(source_file);
 }

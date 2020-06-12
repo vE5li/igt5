@@ -18,9 +18,9 @@ fn comma_seperated_list(list: &Vector<Data>) -> VectorString {
         if index == 0 {
             string.push_str(&item.serialize());
         } else if index == list.len() - 1 {
-            string.push_str(&format_ascii!(" or {}", item.serialize()));
+            string.push_str(&format_vector!(" or {}", item.serialize()));
         } else {
-            string.push_str(&format_ascii!(", {}", item.serialize()));
+            string.push_str(&format_vector!(", {}", item.serialize()));
         }
     }
     return string;

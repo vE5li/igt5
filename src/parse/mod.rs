@@ -125,11 +125,11 @@ impl<'p> Parser<'p> {
         let mut dependencies = Dependencies::new();
 
         for operator in variant_registry.avalible_operators().iter() {
-            dependencies.insert(Data::Identifier(format_ascii!("operator:{}", operator)), Vec::new());
+            dependencies.insert(Data::Identifier(format_vector!("operator:{}", operator)), Vec::new());
         }
 
         for keyword in variant_registry.avalible_keywords().iter() {
-            dependencies.insert(Data::Identifier(format_ascii!("keyword:{}", keyword)), Vec::new());
+            dependencies.insert(Data::Identifier(format_vector!("keyword:{}", keyword)), Vec::new());
         }
 
         if variant_registry.has_identifiers() {

@@ -25,8 +25,8 @@ impl Token {
     pub fn to_location(&self) -> Data {
         match self {
             Token::Comment(..) => panic!(),
-            Token::Operator(operator, _position) => return Data::Identifier(format_ascii!("operator:{}", operator)),
-            Token::Keyword(keyword, _position) => return Data::Identifier(format_ascii!("keyword:{}", keyword)),
+            Token::Operator(operator, _position) => return Data::Identifier(format_vector!("operator:{}", operator)),
+            Token::Keyword(keyword, _position) => return Data::Identifier(format_vector!("keyword:{}", keyword)),
             Token::Identifier(..) => return identifier!(str, "identifier"),
             Token::TypeIdentifier(..) => return identifier!(str, "type_identifier"),
             Token::Character(..) => return identifier!(str, "character"),

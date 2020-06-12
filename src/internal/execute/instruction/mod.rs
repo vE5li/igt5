@@ -280,7 +280,6 @@ pub fn instruction(name: &VectorString, raw_parameters: Option<Vector<Data>>, st
                     command.arg(&unpack_string!(argument).serialize());
                 }
 
-                // ensure that the returned string (if any) is ascii
                 *last = Some(boolean!(command.status().expect("failed to execute process").success())); // RETURN NONE INSTEAD OF PANICING
             }
 
@@ -292,7 +291,6 @@ pub fn instruction(name: &VectorString, raw_parameters: Option<Vector<Data>>, st
                     command.arg(&unpack_string!(argument).printable());
                 }
 
-                // ensure that the returned string (if any) is ascii
                 *last = Some(boolean!(command.stdout(Stdio::null()).status().expect("failed to execute process").success())); // RETURN NONE INSTEAD OF PANICING
             }
 

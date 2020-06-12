@@ -94,21 +94,21 @@ macro_rules! format_hook {
                             Some(return_value) => {
                                 match return_value {
                                     Data::String(ref string) => string.clone(),
-                                    _ => format_ascii!("error in formatter {}: must return a string; found {}", $name, return_value.serialize()),
+                                    _ => format_vector!("error in formatter {}: must return a string; found {}", $name, return_value.serialize()),
                                 }
                             },
 
-                            None => format_ascii!("error in formatter {}: must return a string", $name),
+                            None => format_vector!("error in formatter {}: must return a string", $name),
                         }
                     },
 
-                    Status::Error(error) => format_ascii!("error in formatter {}: {}", $name, error.display(&None, $build, $context)),
+                    Status::Error(error) => format_vector!("error in formatter {}: {}", $name, error.display(&None, $build, $context)),
                 }
             } else {
-                format_ascii!($($arguments)*)
+                format_vector!($($arguments)*)
             }
         } else {
-            format_ascii!($($arguments)*)
+            format_vector!($($arguments)*)
         }
     );
 }
@@ -169,7 +169,6 @@ macro_rules! error {
     (InvalidNumber, $system:expr)                                       => (Status::Error(Error::InvalidNumber($system)));
     (ExpectedWord)                                                      => (Status::Error(Error::ExpectedWord));
     (ExpectedWordFound, $found:expr)                                    => (Status::Error(Error::ExpectedWordFound($found)));
-    (NonAsciiCharacter)                                                 => (Status::Error(Error::NonAsciiCharacter));
     (InvalidNumberSystem, $system:expr)                                 => (Status::Error(Error::InvalidNumberSystem($system)));
     (AmbiguousIdentifier, $identifier:expr)                             => (Status::Error(Error::AmbiguousIdentifier($identifier)));
 }
@@ -227,7 +226,7 @@ macro_rules! expected_list {
     ($($arguments:tt)*) => (list!([$($arguments)*].iter().map(|item| keyword!(str, item.as_ref() as &str)).collect()));
 }
 
-macro_rules! format_ascii {
+macro_rules! format_vector {
     ($format:expr) => (VectorString::from($format));
     ($format:expr, $($arguments:tt)*) => (VectorString::from(&format!($format, $($arguments)*)));
 }
@@ -258,14 +257,14 @@ macro_rules! path {
 macro_rules! identifier {
     ($identifier:expr) => (Data::Identifier($identifier));
     (str, $identifier:expr) => (Data::Identifier(VectorString::from($identifier)));
-    (str, $identifier:expr, $($arguments:tt)*) => (Data::Identifier(format_ascii!($identifier, $($arguments)*)));
+    (str, $identifier:expr, $($arguments:tt)*) => (Data::Identifier(format_vector!($identifier, $($arguments)*)));
 }
 
 #[allow(unused_macros)]
 macro_rules! keyword {
     ($keyword:expr) => (Data::Keyword($keyword));
     (str, $keyword:expr) => (Data::Keyword(VectorString::from($keyword)));
-    (str, $keyword:expr, $($arguments:tt)*) => (Data::Keyword(format_ascii!($keyword, $($arguments)*)));
+    (str, $keyword:expr, $($arguments:tt)*) => (Data::Keyword(format_vector!($keyword, $($arguments)*)));
 }
 
 #[allow(unused_macros)]
@@ -273,7 +272,7 @@ macro_rules! string {
     ()             => (Data::String(VectorString::new()));
     ($string:expr) => (Data::String($string));
     (str, $string:expr) => (Data::String(VectorString::from($string)));
-    (str, $string:expr, $($arguments:tt)*) => (Data::String(format_ascii!($string, $($arguments)*)));
+    (str, $string:expr, $($arguments:tt)*) => (Data::String(format_vector!($string, $($arguments)*)));
 }
 
 #[allow(unused_macros)]
