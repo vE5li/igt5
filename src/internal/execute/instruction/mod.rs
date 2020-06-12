@@ -48,15 +48,15 @@ macro_rules! reduce_positions {
 
 macro_rules! combine_data {
     ($parameters:expr, $variant:ident, $name:expr) => ({
-        let value: AsciiString = $parameters.iter().map(|item| item.to_string()).collect();
+        let value: VectorString = $parameters.iter().map(|item| item.to_string()).collect();
         ensure!(!value.is_empty(), Message, string!(str, "{} may not be empty", $name));
         ensure!(!value.first().unwrap().is_digit(), Message, string!(str, "{} may not start with a digit", $name));
-        ensure!(CharacterStack::new(AsciiString::from(""), None).is_pure(&value), Message, string!(str, "{} may only contain non breaking characters", $name));
+        ensure!(CharacterStack::new(VectorString::from(""), None).is_pure(&value), Message, string!(str, "{} may only contain non breaking characters", $name));
         Data::$variant(value)
     });
 }
 
-pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, stack: &mut DataStack, last: &mut Option<Data>, current_pass: &Option<AsciiString>, root: &Data, scope: &Data, build: &Data, context: &Data) -> Status<bool> {
+pub fn instruction(name: &VectorString, raw_parameters: Option<Vector<Data>>, stack: &mut DataStack, last: &mut Option<Data>, current_pass: &Option<VectorString>, root: &Data, scope: &Data, build: &Data, context: &Data) -> Status<bool> {
 
     let internal_name = name.printable();
     let description = match (*INSTRUCTIONS).get(internal_name.as_str()) {
@@ -152,7 +152,7 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
             }
 
             Signature::Error => {
-                let mut string = AsciiString::new();
+                let mut string = VectorString::new();
                 for parameter in parameters.iter() {
                     string.push_str(&parameter.to_string());
                 }
@@ -164,7 +164,7 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
                 let (state, length) = confirm!(DataStack::resolve_condition(&parameters, last));
                 ensure!(parameters.len() >= length, Message, string!(str, "ensure expectes an error message"));
                 if !state {
-                    let mut string = AsciiString::new();
+                    let mut string = VectorString::new();
                     for parameter in &parameters[length..] {
                         string.push_str(&parameter.to_string());
                     }
@@ -246,7 +246,7 @@ pub fn instruction(name: &AsciiString, raw_parameters: Option<Vector<Data>>, sta
             Signature::Join => {
                 let list = unpack_list!(&parameters[0]);
                 let seperator = unpack_literal!(&parameters[1]);
-                let mut string = AsciiString::new();
+                let mut string = VectorString::new();
                 for (index, item) in list.iter().enumerate() {
                     string.push_str(&item.to_string());
                     if index != list.len() - 1 {

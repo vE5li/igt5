@@ -2,12 +2,12 @@ use internal::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
-    Comment(AsciiString, Vec<Position>),
-    Keyword(AsciiString, Vec<Position>),
-    Operator(AsciiString, Vec<Position>),
-    Identifier(AsciiString, Vec<Position>),
-    TypeIdentifier(AsciiString, Vec<Position>),
-    String(AsciiString, Vec<Position>),
+    Comment(VectorString, Vec<Position>),
+    Keyword(VectorString, Vec<Position>),
+    Operator(VectorString, Vec<Position>),
+    Identifier(VectorString, Vec<Position>),
+    TypeIdentifier(VectorString, Vec<Position>),
+    String(VectorString, Vec<Position>),
     Character(Character, Vec<Position>),
     Integer(i64, Vec<Position>),
     Float(f64, Vec<Position>),

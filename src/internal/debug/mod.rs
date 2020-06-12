@@ -12,8 +12,8 @@ pub use self::error::Error;
 
 use internal::*;
 
-fn comma_seperated_list(list: &Vector<Data>) -> AsciiString {
-    let mut string = AsciiString::new();
+fn comma_seperated_list(list: &Vector<Data>) -> VectorString {
+    let mut string = VectorString::new();
     for (index, item) in list.iter().enumerate() {
         if index == 0 {
             string.push_str(&item.serialize());
@@ -26,6 +26,6 @@ fn comma_seperated_list(list: &Vector<Data>) -> AsciiString {
     return string;
 }
 
-fn expanded_list(_errors: Vector<Error>) -> AsciiString {
-    return AsciiString::from("<expanded list>");
+fn expanded_list(_errors: Vector<Error>) -> VectorString {
+    return VectorString::from("<expanded list>");
 }

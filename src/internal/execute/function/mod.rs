@@ -4,7 +4,7 @@ use super::instruction;
 use self::parameter::FunctionParameter;
 use internal::*;
 
-pub fn function(function: &Data, parameters: Vector<Data>, current_pass: &Option<AsciiString>, root: &Data, build: &Data, context: &Data) -> Status<Option<Data>> {
+pub fn function(function: &Data, parameters: Vector<Data>, current_pass: &Option<VectorString>, root: &Data, build: &Data, context: &Data) -> Status<Option<Data>> {
     let function_body = unpack_list!(function);
     let mut function_stack = DataStack::new(&function_body);
     let mut scope = map!();

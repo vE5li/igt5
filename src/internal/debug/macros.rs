@@ -57,7 +57,7 @@ macro_rules! ensure {
 
 macro_rules! push_by_length {
     ($collection:expr, $primary_item:expr, $secondary_item:expr) => (
-        match $collection.iter().position(|iterator: &(AsciiString, _)| iterator.0.len() <= $primary_item.len()) {
+        match $collection.iter().position(|iterator: &(VectorString, _)| iterator.0.len() <= $primary_item.len()) {
             Some(index) => $collection.insert(index, ($primary_item, $secondary_item)),
             None => $collection.push(($primary_item, $secondary_item)),
         }
@@ -177,8 +177,8 @@ macro_rules! error {
 macro_rules! boolean_to_string {
     ($boolean:expr) => (
         match $boolean {
-            true => AsciiString::from("true"),
-            false => AsciiString::from("false"),
+            true => VectorString::from("true"),
+            false => VectorString::from("false"),
         }
     );
 }
@@ -228,8 +228,8 @@ macro_rules! expected_list {
 }
 
 macro_rules! format_ascii {
-    ($format:expr) => (AsciiString::from($format));
-    ($format:expr, $($arguments:tt)*) => (AsciiString::from(&format!($format, $($arguments)*)));
+    ($format:expr) => (VectorString::from($format));
+    ($format:expr, $($arguments:tt)*) => (VectorString::from(&format!($format, $($arguments)*)));
 }
 
 macro_rules! vector {
@@ -257,22 +257,22 @@ macro_rules! path {
 #[allow(unused_macros)]
 macro_rules! identifier {
     ($identifier:expr) => (Data::Identifier($identifier));
-    (str, $identifier:expr) => (Data::Identifier(AsciiString::from($identifier)));
+    (str, $identifier:expr) => (Data::Identifier(VectorString::from($identifier)));
     (str, $identifier:expr, $($arguments:tt)*) => (Data::Identifier(format_ascii!($identifier, $($arguments)*)));
 }
 
 #[allow(unused_macros)]
 macro_rules! keyword {
     ($keyword:expr) => (Data::Keyword($keyword));
-    (str, $keyword:expr) => (Data::Keyword(AsciiString::from($keyword)));
+    (str, $keyword:expr) => (Data::Keyword(VectorString::from($keyword)));
     (str, $keyword:expr, $($arguments:tt)*) => (Data::Keyword(format_ascii!($keyword, $($arguments)*)));
 }
 
 #[allow(unused_macros)]
 macro_rules! string {
-    ()             => (Data::String(AsciiString::new()));
+    ()             => (Data::String(VectorString::new()));
     ($string:expr) => (Data::String($string));
-    (str, $string:expr) => (Data::String(AsciiString::from($string)));
+    (str, $string:expr) => (Data::String(VectorString::from($string)));
     (str, $string:expr, $($arguments:tt)*) => (Data::String(format_ascii!($string, $($arguments)*)));
 }
 

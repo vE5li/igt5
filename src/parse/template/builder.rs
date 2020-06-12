@@ -84,7 +84,7 @@ impl<'t> TemplateBuilder<'t> {
     }
 
     fn collect_comment(&mut self) -> (Data, Vec<Position>) {
-        let mut comment = AsciiString::new();
+        let mut comment = VectorString::new();
         let mut comment_positions = Vec::new();
         while let Token::Comment(data, positions) = &self.token_stream[self.token_index] {
             comment_positions.extend_from_slice(&positions[..]); // MAKE THIS BETTER AND FASTER

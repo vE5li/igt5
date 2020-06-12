@@ -2,7 +2,7 @@ use internal::*;
 
 #[derive(Clone, PartialEq, Eq)]
 enum PositionKey {
-    Some(Option<AsciiString>, AsciiString),
+    Some(Option<VectorString>, VectorString),
     None,
 }
 
@@ -28,8 +28,8 @@ impl Compare for PositionKey {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Position {
-    pub file:       Option<AsciiString>,
-    pub source:     AsciiString,
+    pub file:       Option<VectorString>,
+    pub source:     VectorString,
     pub line:       usize,
     pub character:  usize,
     pub length:     usize,
@@ -37,7 +37,7 @@ pub struct Position {
 
 impl Position {
 
-    pub fn new(file: Option<AsciiString>, source: AsciiString, line: usize, character: usize, length: usize) -> Position {
+    pub fn new(file: Option<VectorString>, source: VectorString, line: usize, character: usize, length: usize) -> Position {
         Self {
             file:       file,
             source:     source,

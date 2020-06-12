@@ -10,9 +10,9 @@ pub enum Data {
     Map(DataMap),
     Path(Vector<Data>),
     List(Vector<Data>),
-    Identifier(AsciiString),
-    Keyword(AsciiString),
-    String(AsciiString),
+    Identifier(VectorString),
+    Keyword(VectorString),
+    String(VectorString),
     Character(Character),
     Integer(i64),
     Float(f64),
@@ -69,14 +69,14 @@ impl Data {
 
     pub fn character(&self) -> Status<Data> {
         match self {
-            Data::Integer(integer) => return success!(character!(code, *integer as u8)), // USE try_into AND PANIC ON OVERFLOW
-            Data::Float(float) => return success!(character!(code, *float as u32 as u8)),
+            Data::Integer(integer) => return success!(character!(code, *integer as u32)), // USE try_into AND PANIC ON OVERFLOW
+            Data::Float(float) => return success!(character!(code, *float as u32)),
             Data::Character(character) => return success!(character!(character.clone())),
             _invalid => return error!(Message, string!(str, "only numbers may be converted to an integer")),
         }
     }
 
-    pub fn to_string(&self) -> AsciiString {
+    pub fn to_string(&self) -> VectorString {
         match self {
             Data::String(ref string) => return string.clone(),
             Data::Character(ref character) => return character.to_string(),
@@ -98,18 +98,18 @@ impl Data {
         }
     }
 
-    pub fn data_type(&self) -> AsciiString {
+    pub fn data_type(&self) -> VectorString {
         match self {
-            Data::Map(..) => return AsciiString::from("map"),
-            Data::List(..) => return AsciiString::from("list"),
-            Data::Path(..) => return AsciiString::from("path"),
-            Data::Keyword(..) => return AsciiString::from("keyword"),
-            Data::Identifier(..) => return AsciiString::from("identifier"),
-            Data::String(..) => return AsciiString::from("string"),
-            Data::Character(..) => return AsciiString::from("character"),
-            Data::Integer(..) => return AsciiString::from("integer"),
-            Data::Float(..) => return AsciiString::from("float"),
-            Data::Boolean(..) => return AsciiString::from("boolean"),
+            Data::Map(..) => return VectorString::from("map"),
+            Data::List(..) => return VectorString::from("list"),
+            Data::Path(..) => return VectorString::from("path"),
+            Data::Keyword(..) => return VectorString::from("keyword"),
+            Data::Identifier(..) => return VectorString::from("identifier"),
+            Data::String(..) => return VectorString::from("string"),
+            Data::Character(..) => return VectorString::from("character"),
+            Data::Integer(..) => return VectorString::from("integer"),
+            Data::Float(..) => return VectorString::from("float"),
+            Data::Boolean(..) => return VectorString::from("boolean"),
         }
     }
 
@@ -1185,7 +1185,7 @@ impl Data {
         return success!(pairs);
     }
 
-    pub fn pass(&self, current_pass: &Option<AsciiString>, root: &Data, build: &Data, context: &Data) -> Status<Data> {
+    pub fn pass(&self, current_pass: &Option<VectorString>, root: &Data, build: &Data, context: &Data) -> Status<Data> {
         match self {
 
             Data::Map(map) => {
@@ -1290,12 +1290,12 @@ impl Data {
         }
     }
 
-    pub fn serialize(&self) -> AsciiString {
+    pub fn serialize(&self) -> VectorString {
         match self {
             Data::Map(map) => serialize_map(map),
             Data::List(items) => serialize_list(items),
             Data::Path(steps) => serialize_path(steps),
-            Data::Integer(integer) => AsciiString::from(&integer.to_string()),
+            Data::Integer(integer) => VectorString::from(&integer.to_string()),
             Data::Float(float) => serialize_float(*float),
             Data::Identifier(identifier) => identifier.clone(),
             Data::Keyword(keyword) => format_ascii!("#{}", keyword),

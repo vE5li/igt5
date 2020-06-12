@@ -2,8 +2,8 @@ use internal::*;
 
 #[derive(Debug)]
 pub struct VariantRegistry {
-    operators:                  Vec<AsciiString>,
-    keywords:                   Vec<AsciiString>,
+    operators:                  Vec<VectorString>,
+    keywords:                   Vec<VectorString>,
     rules:                      Rules,
     pub has_characters:         bool,
     pub has_comments:           bool,
@@ -37,7 +37,7 @@ impl VariantRegistry {
         self.rules = rules;
     }
 
-    pub fn validate_operators(&self, filters: &Vec<AsciiString>) -> Status<()> {
+    pub fn validate_operators(&self, filters: &Vec<VectorString>) -> Status<()> {
         ensure!(!self.operators.is_empty(), Message, string!(str, "tokenizer does not support operators"));
         for filter in filters.iter() {
             ensure!(self.is_operator(filter), Message, string!(str, "{} is not a valid operator", filter));
@@ -45,7 +45,7 @@ impl VariantRegistry {
         return success!(());
     }
 
-    pub fn validate_keywords(&self, filters: &Vec<AsciiString>) -> Status<()> {
+    pub fn validate_keywords(&self, filters: &Vec<VectorString>) -> Status<()> {
         ensure!(!self.keywords.is_empty(), Message, string!(str, "tokenizer does not support keywords"));
         for filter in filters.iter() {
             ensure!(self.is_keyword(filter), Message, string!(str, "{} is not a valid keyword", filter));
@@ -53,7 +53,7 @@ impl VariantRegistry {
         return success!(());
     }
 
-    pub fn validate_identifiers(&self, filters: &Vec<AsciiString>) -> Status<()> {
+    pub fn validate_identifiers(&self, filters: &Vec<VectorString>) -> Status<()> {
         ensure!(self.has_identifiers(), Message, string!(str, "tokenizer does not support identifiers"));
         for filter in filters.iter() {
             ensure!(self.is_identifier(filter), Message, string!(str, "{} is not a valid identifier", filter));
@@ -61,7 +61,7 @@ impl VariantRegistry {
         return success!(());
     }
 
-    pub fn validate_type_identifiers(&self, filters: &Vec<AsciiString>) -> Status<()> {
+    pub fn validate_type_identifiers(&self, filters: &Vec<VectorString>) -> Status<()> {
         ensure!(self.has_type_identifiers(), Message, string!(str, "tokenizer does not support type identifiers"));
         for filter in filters.iter() {
             ensure!(self.is_type_identifier(filter), Message, string!(str, "{} is not a valid type identifier", filter));
@@ -103,45 +103,45 @@ impl VariantRegistry {
         return self.rules.has_mapping("type_identifier");
     }
 
-    pub fn is_identifier(&self, source: &AsciiString) -> bool {
+    pub fn is_identifier(&self, source: &VectorString) -> bool {
         match self.rules.check_prefix(source) {
             Some((_, action)) => return action.is_mapped_to("identifier"),
             None => return false,
         }
     }
 
-    pub fn is_type_identifier(&self, source: &AsciiString) -> bool {
+    pub fn is_type_identifier(&self, source: &VectorString) -> bool {
         match self.rules.check_prefix(source) {
             Some((_, action)) => return action.is_mapped_to("type_identifier"),
             None => return false,
         }
     }
 
-    pub fn is_operator(&self, compare: &AsciiString) -> bool {
+    pub fn is_operator(&self, compare: &VectorString) -> bool {
         return self.operators.iter().find(|operator| **operator == *compare).is_some();
     }
 
-    pub fn is_keyword(&self, compare: &AsciiString) -> bool {
+    pub fn is_keyword(&self, compare: &VectorString) -> bool {
         return self.keywords.iter().find(|keyword| **keyword == *compare).is_some();
     }
 
-    pub fn register_operator(&mut self, operator: AsciiString) {
+    pub fn register_operator(&mut self, operator: VectorString) {
         if !self.is_operator(&operator) {
             self.operators.push(operator);
         }
     }
 
-    pub fn register_keyword(&mut self, keyword: AsciiString) {
+    pub fn register_keyword(&mut self, keyword: VectorString) {
         if !self.is_keyword(&keyword) {
             self.keywords.push(keyword);
         }
     }
 
-    pub fn avalible_keywords(&self) -> Vec<AsciiString> {
+    pub fn avalible_keywords(&self) -> Vec<VectorString> {
         return self.keywords.clone();
     }
 
-    pub fn avalible_operators(&self) -> Vec<AsciiString> {
+    pub fn avalible_operators(&self) -> Vec<VectorString> {
         return self.operators.clone();
     }
 }

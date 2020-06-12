@@ -2,8 +2,8 @@ use internal::*;
 use tokenize::Token;
 
 pub struct CommentTokenizer {
-    delimiters:     Vec<(AsciiString, AsciiString)>,
-    notes:          Vec<(AsciiString, Data)>,
+    delimiters:     Vec<(VectorString, VectorString)>,
+    notes:          Vec<(VectorString, Data)>,
 }
 
 impl CommentTokenizer {
@@ -20,7 +20,7 @@ impl CommentTokenizer {
             ensure!(!delimiter.is_empty(), EmptyLiteral);
             confirm!(character_stack.register_breaking(delimiter.first().unwrap()));
             confirm!(character_stack.register_signature(delimiter.clone()));
-            delimiters.push((delimiter, AsciiString::from("\n")));
+            delimiters.push((delimiter, VectorString::from("\n")));
         }
 
         if let Some(block_comment) = confirm!(settings.index(&keyword!(str, "block_comment"))) {
@@ -51,10 +51,10 @@ impl CommentTokenizer {
         });
     }
 
-    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>, current_pass: &Option<AsciiString>, root: &Data, build: &Data, context: &Data) -> Status<bool> {
+    pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>, current_pass: &Option<VectorString>, root: &Data, build: &Data, context: &Data) -> Status<bool> {
         for (start_delimiter, end_delimiter) in self.delimiters.iter() {
             if character_stack.check_string(&start_delimiter) {
-                let mut comment_string = AsciiString::new();
+                let mut comment_string = VectorString::new();
 
                 while !character_stack.check_string(&end_delimiter) {
                     ensure!(!character_stack.is_empty(), UnterminatedToken, identifier!(str, "comment"));
@@ -65,7 +65,7 @@ impl CommentTokenizer {
                     if let Some(start_position) = comment_string.find(note_keyword) {
                         let offset = start_position + note_keyword.len();
                         let sliced = comment_string.slice_end(offset);
-                        let note_message = match sliced.find(&AsciiString::from("\n")) { // MAKE THIS WORK FOR BLOCK COMMENTS
+                        let note_message = match sliced.find(&VectorString::from("\n")) { // MAKE THIS WORK FOR BLOCK COMMENTS
                             Some(end_position) => sliced.slice(0, end_position),
                             None => sliced,
                         };

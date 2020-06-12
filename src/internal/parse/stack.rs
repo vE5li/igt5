@@ -2,19 +2,19 @@ use internal::*;
 
 #[derive(Debug)]
 pub struct CharacterStack {
-    source:         AsciiString,
+    source:         VectorString,
     save_states:    Vec<(usize, Vec<Position>)>,
     index:          usize,
-    file:           Option<AsciiString>,
+    file:           Option<VectorString>,
     breaking:       Vec<Character>,
     non_breaking:   Vec<Character>,
-    signature:      Vec<AsciiString>,
+    signature:      Vec<VectorString>,
     positions:      Vec<Position>,
 }
 
 impl CharacterStack {
 
-    pub fn new(source: AsciiString, file_path: Option<AsciiString>) -> Self {
+    pub fn new(source: VectorString, file_path: Option<VectorString>) -> Self {
         let non_breaking = vec!['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
         let mut breaking = Vec::new();
@@ -63,12 +63,10 @@ impl CharacterStack {
     pub fn advance(&mut self, offset: usize) {
         for _offset in 0..offset {
             if self.source.len() > self.index {
+                self.positions.last_mut().unwrap().length += 1;
                 if self.source[self.index].as_char() == '\n' {
                     let line = self.positions.last().unwrap().line;
                     self.positions.push(Position::new(self.file.clone(), self.source.clone(), line + 1, 1, 0));
-                } else {
-                    let position = self.positions.last_mut().unwrap();
-                    position.length += 1;
                 }
             }
             self.index += 1;
@@ -95,7 +93,7 @@ impl CharacterStack {
         return Some(character);
     }
 
-    pub fn till_breaking(&mut self) -> Status<AsciiString> {
+    pub fn till_breaking(&mut self) -> Status<VectorString> {
         let first_character = expect!(self.pop(), ExpectedWord); // TODO better error
         let mut word = first_character.to_string();
 
@@ -126,7 +124,7 @@ impl CharacterStack {
         false
     }
 
-    pub fn check_string(&mut self, compare: &AsciiString) -> bool {
+    pub fn check_string(&mut self, compare: &VectorString) -> bool {
         if self.index + compare.len() > self.source.len() {
             return false;
         }
@@ -161,7 +159,7 @@ impl CharacterStack {
         return success!(());
     }
 
-    pub fn register_signature(&mut self, signature: AsciiString) -> Status<()> {
+    pub fn register_signature(&mut self, signature: VectorString) -> Status<()> {
         if !self.signature.contains(&signature) {
             self.signature.push(signature);
         } else {
@@ -170,7 +168,7 @@ impl CharacterStack {
         return success!(());
     }
 
-    pub fn register_pure(&mut self, literal: &AsciiString) -> Status<()> {
+    pub fn register_pure(&mut self, literal: &VectorString) -> Status<()> {
         for character in literal.chars() {
             confirm!(self.register_non_breaking(*character));
         }
@@ -181,7 +179,7 @@ impl CharacterStack {
         return self.breaking.contains(&compare);
     }
 
-    pub fn is_pure(&self, compare: &AsciiString) -> bool {
+    pub fn is_pure(&self, compare: &VectorString) -> bool {
         return compare.chars().find(|character| self.is_breaking(**character)).is_none();
     }
 }

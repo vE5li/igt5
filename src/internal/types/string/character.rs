@@ -5,12 +5,12 @@ static SERIALIZE: [&'static str; 95] = [ " ", "!", "\\\"", "#", "$", "%", "&", "
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Character {
-    data:       u8,
+    data:       u32,
 }
 
 impl Character {
 
-    pub fn from_code(code: u8) -> Self {
+    pub fn from_code(code: u32) -> Self {
         Self {
             data:       code,
         }
@@ -18,11 +18,11 @@ impl Character {
 
     pub fn from_char(character: char) -> Self {
         Self {
-            data:       character as u8,
+            data:       character as u32,
         }
     }
 
-    pub fn code(&self) -> u8 {
+    pub fn code(&self) -> u32 {
         return self.data;
     }
 
@@ -34,34 +34,35 @@ impl Character {
             13 => String::from("\\r"),
             27 => String::from("\\e"),
             32..=126 => String::from(SERIALIZE[(self.data - 32) as usize]),
-            other => format!("\\[{}]", other),
+            0..=31 => format!("\\[{}]", self.data),
+            other => format!("{}", other),
         }
     }
 
-    pub fn to_string(&self) -> AsciiString {
-        let mut string = AsciiString::new();
+    pub fn to_string(&self) -> VectorString {
+        let mut string = VectorString::new();
         string.push(*self);
         return string;
     }
 
     pub fn as_char(&self) -> char {
-        return self.data as char;
+        return self.data as u8 as char; // TODO
     }
 
     pub fn uppercase(&self) -> Self {
-        return Character::from_char((self.data as char).to_ascii_uppercase());
+        return Character::from_char(self.as_char().to_ascii_uppercase());
     }
 
     pub fn lowercase(&self) -> Self {
-        return Character::from_char((self.data as char).to_ascii_lowercase());
+        return Character::from_char(self.as_char().to_ascii_lowercase());
     }
 
     pub fn is_uppercase(&self) -> bool {
-        return (self.data as char).is_uppercase();
+        return self.as_char().is_uppercase();
     }
 
     pub fn is_lowercase(&self) -> bool {
-        return (self.data as char).is_lowercase();
+        return self.as_char().is_lowercase();
     }
 
     pub fn is_digit(&self) -> bool {
@@ -82,7 +83,7 @@ impl Debug for Character {
 impl Display for Character {
 
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        return write!(f, "{}", self.data as char);
+        return write!(f, "{}", self.as_char());
     }
 }
 

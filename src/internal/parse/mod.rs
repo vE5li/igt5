@@ -8,8 +8,8 @@ use self::number::parse_number;
 
 // new parse_string that returns vector of data (for error handling)
 
-fn collect(character_stack: &mut CharacterStack, name: &str, compare: char) -> Status<AsciiString> {
-    let mut literal = AsciiString::new();
+fn collect(character_stack: &mut CharacterStack, name: &str, compare: char) -> Status<VectorString> {
+    let mut literal = VectorString::new();
     while let Some(character) = character_stack.pop() {
         match character.as_char() {
 
@@ -31,7 +31,7 @@ fn collect(character_stack: &mut CharacterStack, name: &str, compare: char) -> S
                             ensure!(!character_stack.is_empty(), UnterminatedToken, identifier!(str, "character"));
                             code.push(character_stack.pop().unwrap().as_char());
                         }
-                        match code.parse::<u8>() {
+                        match code.parse::<u32>() {
                             Ok(value) => literal.push(Character::from_code(value)),
                             Err(_) => return error!(InvalidNumber, identifier!(str, "decimal")),
                         }

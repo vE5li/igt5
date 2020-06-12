@@ -2,8 +2,8 @@ use internal::*;
 use tokenize::Token;
 
 pub struct StringTokenizer {
-    delimiter:      (AsciiString, AsciiString),
-    replace:        Vec<(AsciiString, AsciiString)>,
+    delimiter:      (VectorString, VectorString),
+    replace:        Vec<(VectorString, VectorString)>,
 }
 
 impl StringTokenizer {
@@ -45,7 +45,7 @@ impl StringTokenizer {
 
     pub fn find(&self, character_stack: &mut CharacterStack, tokens: &mut Vec<Token>) -> Status<bool> {
         if character_stack.check_string(&self.delimiter.0) {
-            let mut string = AsciiString::new();
+            let mut string = VectorString::new();
 
             'check: while !character_stack.check_string(&self.delimiter.1) {
                 ensure!(!character_stack.is_empty(), UnterminatedToken, identifier!(str, "string"));

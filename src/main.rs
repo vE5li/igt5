@@ -61,10 +61,9 @@ fn main() {
         }
     }
 
-    // ensure all parameters are ascii
     let parameters: Vector<Data> = command_line.iter().map(|argument| string!(str, argument.as_str())).collect();
     let project_file = project_file.into_inner().unwrap();
-    let root = display!(read_map(&AsciiString::from(&project_file)), &None, &build, &context);
+    let root = display!(read_map(&VectorString::from(&project_file)), &None, &build, &context);
 
     let main_function_path = path!(vector![keyword!(str, "function"), keyword!(str, "main")]);
     match display!(root.index(&main_function_path), &Some(&root), &build, &context) {

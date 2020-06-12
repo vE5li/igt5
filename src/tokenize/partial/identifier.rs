@@ -3,7 +3,7 @@ use tokenize::Token;
 
 pub struct IdentifierTokenizer {
     rules:      Rules,
-    doubles:    Vec<AsciiString>,
+    doubles:    Vec<VectorString>,
 }
 
 impl IdentifierTokenizer {
@@ -17,7 +17,7 @@ impl IdentifierTokenizer {
             for prefix in unpack_list!(&prefix_list).into_iter() {
                 let prefix = unpack_identifier!(&prefix);
                 confirm!(character_stack.register_pure(&prefix));
-                confirm!(rules.add(prefix, Action::Map(AsciiString::from("identifier"))));
+                confirm!(rules.add(prefix, Action::Map(VectorString::from("identifier"))));
             }
         }
 
@@ -27,7 +27,7 @@ impl IdentifierTokenizer {
                 confirm!(character_stack.register_pure(&type_prefix));
                 match rules.has_mapping_to(&type_prefix, "identifier") {
                     true => doubles.push(type_prefix),
-                    false => confirm!(rules.add(type_prefix, Action::Map(AsciiString::from("type_identifier")))),
+                    false => confirm!(rules.add(type_prefix, Action::Map(VectorString::from("type_identifier")))),
                 }
             }
         }

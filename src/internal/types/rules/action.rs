@@ -2,7 +2,7 @@ use internal::*;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Action {
-    Map(AsciiString),
+    Map(VectorString),
     Invalid,
     Ignored,
 }

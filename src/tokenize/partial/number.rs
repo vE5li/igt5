@@ -1,7 +1,7 @@
 use internal::*;
 use tokenize::Token;
 
-fn to_length(option: &Option<AsciiString>) -> usize {
+fn to_length(option: &Option<VectorString>) -> usize {
     match option {
         Some(some) => some.len(),
         None => 0,
@@ -9,8 +9,8 @@ fn to_length(option: &Option<AsciiString>) -> usize {
 }
 
 struct Format {
-    pub variants:       Vec<(Option<AsciiString>, AsciiString)>,
-    suffixes:           Vec<AsciiString>,
+    pub variants:       Vec<(Option<VectorString>, VectorString)>,
+    suffixes:           Vec<VectorString>,
     digits:             Vec<Character>,
 }
 
@@ -36,7 +36,7 @@ impl Format {
         return success!(());
     }
 
-    pub fn add(&mut self, suffix: Option<AsciiString>, number_system: AsciiString, number_systems: &Map<AsciiString, Vec<Character>>) -> Status<()> {
+    pub fn add(&mut self, suffix: Option<VectorString>, number_system: VectorString, number_systems: &Map<VectorString, Vec<Character>>) -> Status<()> {
 
         if let Some(suffix) = &suffix {
             self.suffixes.push(suffix.clone());
@@ -59,10 +59,10 @@ impl Format {
 }
 
 pub struct NumberTokenizer {
-    number_systems:     Map<AsciiString, Vec<Character>>,
-    formats:            Vec<(Option<AsciiString>, Format)>,
-    float_delimiter:    Option<AsciiString>,
-    negative:           Option<AsciiString>,
+    number_systems:     Map<VectorString, Vec<Character>>,
+    formats:            Vec<(Option<VectorString>, Format)>,
+    float_delimiter:    Option<VectorString>,
+    negative:           Option<VectorString>,
 }
 
 impl NumberTokenizer {
@@ -193,7 +193,7 @@ impl NumberTokenizer {
         });
     }
 
-    fn parse_number(&self, source: &AsciiString, float_source: Option<&AsciiString>, number_system: &AsciiString, negative: bool, positions: &Vec<Position>) -> Option<Token> {
+    fn parse_number(&self, source: &VectorString, float_source: Option<&VectorString>, number_system: &VectorString, negative: bool, positions: &Vec<Position>) -> Option<Token> {
         let number_system = self.number_systems.get(number_system).unwrap();
         let base = number_system.len();
         let mut value = 0;
@@ -234,7 +234,7 @@ impl NumberTokenizer {
         }
     }
 
-    fn try_parse(&self, source: &AsciiString, float_source: Option<&AsciiString>, format: &Format, negative: bool, positions: &Vec<Position>) -> Option<Token> {
+    fn try_parse(&self, source: &VectorString, float_source: Option<&VectorString>, format: &Format, negative: bool, positions: &Vec<Position>) -> Option<Token> {
         for (suffix, number_system) in format.variants.iter() {
             if let Some(suffix) = suffix {
                 if let Some(float_source) = float_source {

@@ -13,7 +13,7 @@ fn print_stage(prefix: &str, stage: &str, compiler: &Data, build: &Data, context
     return success!(());
 }
 
-fn find_source_file(compiler: &Data, source_directory: &mut AsciiString, module_name: &AsciiString) -> Status<AsciiString> {
+fn find_source_file(compiler: &Data, source_directory: &mut VectorString, module_name: &VectorString) -> Status<VectorString> {
 
     let file_settings = index_field!(compiler, "file_settings");
     ensure!(file_settings.is_map(), ExpectedFound, expected_list!["map"], file_settings.clone());
@@ -35,7 +35,7 @@ fn find_source_file(compiler: &Data, source_directory: &mut AsciiString, module_
     return success!(source_file);
 }
 
-fn compile(mut context: Data, compiler: Data, parents: Data, source_string: AsciiString, source_file: Option<AsciiString>, source_directory: AsciiString) -> Status<Data> {
+fn compile(mut context: Data, compiler: Data, parents: Data, source_string: VectorString, source_file: Option<VectorString>, source_directory: VectorString) -> Status<Data> {
 
     let build_map = map!();
 
@@ -76,7 +76,7 @@ pub fn compile_module(parameters: Vec<Data>, context: &Data) -> Status<Data> {
         None => {
             match confirm!(context.index(&keyword!(str, "directory"))) {
                 Some(directory) => unpack_string!(&directory), // TODO: proper message
-                None => AsciiString::new(),
+                None => VectorString::new(),
             }
         }
     };
@@ -103,7 +103,7 @@ pub fn compile_file(parameters: Vec<Data>, context: &Data) -> Status<Data> {
 
     let source_directory = match confirm!(context.index(&keyword!(str, "directory"))) {
         Some(directory) => unpack_string!(&directory),
-        None => AsciiString::new(),
+        None => VectorString::new(),
     };
 
     let parents = match confirm!(context.index(&keyword!(str, "parents"))) {
@@ -124,7 +124,7 @@ pub fn compile_string(parameters: Vec<Data>, context: &Data) -> Status<Data> {
 
     let source_directory = match confirm!(context.index(&keyword!(str, "directory"))) {
         Some(directory) => unpack_string!(&directory),
-        None => AsciiString::new(),
+        None => VectorString::new(),
     };
 
     let parents = match confirm!(context.index(&keyword!(str, "parents"))) {

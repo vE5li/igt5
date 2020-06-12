@@ -1,19 +1,19 @@
 use internal::*;
 
-pub fn serialize_float(value: f64) -> AsciiString {
+pub fn serialize_float(value: f64) -> VectorString {
     let mut string = value.to_string();
     if !string.contains(".") {
         string.push_str(".0");
     }
-    return AsciiString::from(&string);
+    return VectorString::from(&string);
 }
 
-pub fn serialize_literal(source: &AsciiString, delimiter: char) -> AsciiString {
+pub fn serialize_literal(source: &VectorString, delimiter: char) -> VectorString {
     return format_ascii!("{}{}{}", delimiter, source.serialize(), delimiter);
 }
 
-pub fn serialize_map(source: &DataMap) -> AsciiString {
-    let mut string = AsciiString::from("{");
+pub fn serialize_map(source: &DataMap) -> VectorString {
+    let mut string = VectorString::from("{");
 
     for (key, value) in source.iter() {
         string.push(Character::from_char(' '));
@@ -27,8 +27,8 @@ pub fn serialize_map(source: &DataMap) -> AsciiString {
     return string;
 }
 
-pub fn serialize_list(source: &Vector<Data>) -> AsciiString {
-    let mut string = AsciiString::from("[");
+pub fn serialize_list(source: &Vector<Data>) -> VectorString {
+    let mut string = VectorString::from("[");
 
     for item in source.iter() {
         string.push(Character::from_char(' '));
@@ -40,8 +40,8 @@ pub fn serialize_list(source: &Vector<Data>) -> AsciiString {
     return string;
 }
 
-pub fn serialize_path(source: &Vector<Data>) -> AsciiString {
-    let mut string = AsciiString::new();
+pub fn serialize_path(source: &Vector<Data>) -> VectorString {
+    let mut string = VectorString::new();
 
     for (index, step) in source.iter().enumerate() {
         string.push_str(&step.serialize());

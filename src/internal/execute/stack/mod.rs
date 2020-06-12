@@ -226,9 +226,9 @@ impl<'s> DataStack<'s> {
 
             Signature::NotContains => !confirm!(source[1].contains(&source[2])),
 
-            Signature::Pure => CharacterStack::new(AsciiString::from(""), None).is_pure(&unpack_literal!(&source[1])),
+            Signature::Pure => CharacterStack::new(VectorString::from(""), None).is_pure(&unpack_literal!(&source[1])),
 
-            Signature::NotPure => !CharacterStack::new(AsciiString::from(""), None).is_pure(&unpack_literal!(&source[1])),
+            Signature::NotPure => !CharacterStack::new(VectorString::from(""), None).is_pure(&unpack_literal!(&source[1])),
 
             Signature::FilePresent => Path::new(unpack_string!(&source[1]).printable().as_str()).exists(),
 

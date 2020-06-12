@@ -66,7 +66,7 @@ pub enum Error {
 
 impl Error {
 
-    pub fn display(self, root: &Option<&Data>, build: &Data, context: &Data) -> AsciiString {
+    pub fn display(self, root: &Option<&Data>, build: &Data, context: &Data) -> VectorString {
         match self {
             Error::Tag(tag, error)                                 => return format_hook!(root, build, context, "tag", vector![tag, string!(error.display(root, build, context))], "{} -> {}", tag.serialize(), error.display(root, build, context)),
             Error::Compiler(errors)                                => return format_hook!(root, build, context, "compiler", vector![list!(errors.into_iter().map(|error| string!(error.display(root, build, context))).collect())], "{}", expanded_list(errors)),

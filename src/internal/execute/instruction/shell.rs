@@ -1,7 +1,7 @@
 use internal::*;
 use std::io::{ BufRead, stdin };
 
-pub fn shell(last: &mut Option<Data>, current_pass: &Option<AsciiString>, root: &Data, scope: &Data, build: &Data, context: &Data) -> Status<()> {
+pub fn shell(last: &mut Option<Data>, current_pass: &Option<VectorString>, root: &Data, scope: &Data, build: &Data, context: &Data) -> Status<()> {
     for line in stdin().lock().lines() {
         let source = format_ascii!("[{}]", line.unwrap());
         let mut character_stack = CharacterStack::new(source, None);
@@ -16,7 +16,7 @@ pub fn shell(last: &mut Option<Data>, current_pass: &Option<AsciiString>, root: 
             false => unpack_keyword!(&instruction_name),
         };
 
-        if instruction_name == AsciiString::from("exit") {
+        if instruction_name == VectorString::from("exit") {
             break;
         }
 

@@ -8,12 +8,12 @@ use std::iter::FromIterator;
 pub use self::character::Character;
 
 #[derive(Clone, PartialEq, Eq)]
-pub struct AsciiString {
+pub struct VectorString {
     data:       Vector<Character>,
 }
 
 #[allow(dead_code)]
-impl AsciiString {
+impl VectorString {
 
     pub fn new() -> Self {
         Self {
@@ -33,7 +33,7 @@ impl AsciiString {
         }
     }
 
-    fn check_from(&self, index: usize, sample: &AsciiString) -> bool {
+    fn check_from(&self, index: usize, sample: &VectorString) -> bool {
         for (offset, character) in sample.chars().enumerate() {
             if self.data.len() - index < sample.len() {
                 return false;
@@ -51,7 +51,7 @@ impl AsciiString {
     }
 
     pub fn printable(&self) -> String {
-        return self.data.iter().map(|character| character.code() as char).collect();
+        return self.data.iter().map(|character| character.as_char()).collect();
     }
 
     pub fn push(&mut self, character: Character) {
@@ -62,13 +62,13 @@ impl AsciiString {
         return self.data.pop();
     }
 
-    pub fn push_str(&mut self, source: &AsciiString) {
+    pub fn push_str(&mut self, source: &VectorString) {
         for character in source.chars() {
             self.data.push(*character);
         }
     }
 
-    pub fn insert_str(&mut self, index: usize, source: &AsciiString) {
+    pub fn insert_str(&mut self, index: usize, source: &VectorString) {
         for character in source.reverse_chars() {
             self.data.insert(index, *character);
         }
@@ -86,7 +86,7 @@ impl AsciiString {
         return self.data.reverse_iter();
     }
 
-    pub fn contains(&self, sample: &AsciiString) -> bool {
+    pub fn contains(&self, sample: &VectorString) -> bool {
         for start in 0..self.data.len() {
             if self.check_from(start, sample) {
                 return true;
@@ -95,7 +95,7 @@ impl AsciiString {
         return false;
     }
 
-    pub fn find(&self, sample: &AsciiString) -> Option<usize> {
+    pub fn find(&self, sample: &VectorString) -> Option<usize> {
         for start in 0..self.data.len() {
             if self.check_from(start, sample) {
                 return Some(start);
@@ -108,9 +108,9 @@ impl AsciiString {
         return self.data.is_empty();
     }
 
-    pub fn split(&self, sample: &AsciiString, void: bool) -> Vec<Self> {
+    pub fn split(&self, sample: &VectorString, void: bool) -> Vec<Self> {
         let mut pieces = Vec::new();
-        let mut buffer = AsciiString::new();
+        let mut buffer = VectorString::new();
         let mut start = 0;
 
         while start < self.data.len() {
@@ -169,8 +169,8 @@ impl AsciiString {
         return self.data.remove(index);
     }
 
-    pub fn replace(&self, from: &AsciiString, to: &AsciiString) -> Self {
-        let mut string = AsciiString::new();
+    pub fn replace(&self, from: &VectorString, to: &VectorString) -> Self {
+        let mut string = VectorString::new();
         let mut start = 0;
 
         while start < self.data.len() {
@@ -186,7 +186,7 @@ impl AsciiString {
         return string;
     }
 
-    pub fn position(&self, sample: &AsciiString) -> Vec<usize> {
+    pub fn position(&self, sample: &VectorString) -> Vec<usize> {
         let mut positions = Vec::new();
         for start in 0..self.data.len() {
             if self.check_from(start, sample) {
@@ -197,7 +197,7 @@ impl AsciiString {
     }
 
     pub fn flip(&self) -> Self {
-        return AsciiString::from_data(self.data.flip());
+        return VectorString::from_data(self.data.flip());
     }
 
     pub fn clear(&mut self) {
@@ -205,10 +205,10 @@ impl AsciiString {
     }
 }
 
-impl FromIterator<Character> for AsciiString {
+impl FromIterator<Character> for VectorString {
 
-    fn from_iter<I: IntoIterator<Item = Character>>(iterator: I) -> AsciiString {
-        let mut string = AsciiString::new();
+    fn from_iter<I: IntoIterator<Item = Character>>(iterator: I) -> VectorString {
+        let mut string = VectorString::new();
         for character in iterator {
             string.push(character);
         }
@@ -216,10 +216,10 @@ impl FromIterator<Character> for AsciiString {
     }
 }
 
-impl FromIterator<AsciiString> for AsciiString {
+impl FromIterator<VectorString> for VectorString {
 
-    fn from_iter<I: IntoIterator<Item = AsciiString>>(iterator: I) -> AsciiString {
-        let mut string = AsciiString::new();
+    fn from_iter<I: IntoIterator<Item = VectorString>>(iterator: I) -> VectorString {
+        let mut string = VectorString::new();
         for source in iterator {
             string.push_str(&source);
         }
@@ -227,7 +227,7 @@ impl FromIterator<AsciiString> for AsciiString {
     }
 }
 
-impl Index<usize> for AsciiString {
+impl Index<usize> for VectorString {
     type Output = Character;
 
     fn index(&self, index: usize) -> &Character {
@@ -235,28 +235,28 @@ impl Index<usize> for AsciiString {
     }
 }
 
-impl IndexMut<usize> for AsciiString {
+impl IndexMut<usize> for VectorString {
 
     fn index_mut(&mut self, index: usize) -> &mut Character {
         return self.data.index_mut(index);
     }
 }
 
-impl Debug for AsciiString {
+impl Debug for VectorString {
 
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         return write!(f, "\"{}\"", self.serialize());
     }
 }
 
-impl Display for AsciiString {
+impl Display for VectorString {
 
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         return write!(f, "{}", self.printable());
     }
 }
 
-impl Compare for AsciiString {
+impl Compare for VectorString {
 
     fn compare(&self, other: &Self) -> Relation {
         let mut index = 0;

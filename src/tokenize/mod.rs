@@ -23,7 +23,7 @@ macro_rules! create_tokenizer {
     });
 }
 
-pub fn tokenize(compiler: &Data, source_string: AsciiString, source_file: Option<AsciiString>, current_pass: &Option<AsciiString>, build: &Data, context: &Data) -> Status<(Vec<Token>, VariantRegistry)> {
+pub fn tokenize(compiler: &Data, source_string: VectorString, source_file: Option<VectorString>, current_pass: &Option<VectorString>, build: &Data, context: &Data) -> Status<(Vec<Token>, VariantRegistry)> {
 
     let mut character_stack = CharacterStack::new(source_string, source_file);
     let mut variant_registry = VariantRegistry::new();
