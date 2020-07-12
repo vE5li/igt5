@@ -4,5 +4,4 @@ version = "0.1.0"
 authors = ["ve5li <ve5li@tuta.io>"]
 
 [dependencies]
-lazy_static = "1.4.0"
-rand = "*"
+dst6 = { git = "https://github.com/vE5li/dst6.git" }

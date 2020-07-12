@@ -1,16 +1,6 @@
-#![feature(allocator_api)]
+extern crate dst6 as kami;
 
-#[macro_use]
-extern crate lazy_static;
-extern crate rand;
-
-#[macro_use]
-mod internal;
-mod tokenize;
-mod parse;
-mod build;
-
-use internal::*;
+use kami::*;
 use std::path::Path;
 use std::env;
 
@@ -33,7 +23,7 @@ fn main() {
 
     let mut command_line: Vec<String> = env::args().skip(1).collect();
     let mut working_directory = Checked::none("working directory");
-    let mut project_file = Checked::some("project file", String::from("project"));
+    let mut project_file = Checked::some("project file", String::from("compiler.data"));
     let mut show_help_menu = false;
     let context = map!();
     let build = map!();
