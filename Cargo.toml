@@ -4,4 +4,5 @@ version = "0.1.0"
 authors = ["ve5li <ve5li@tuta.io>"]
 
 [dependencies]
-dst6 = { git = "https://github.com/vE5li/dst6.git" }
+dst6 = { path = "/usr/share/seamonkey/dst6" }
+#dst6 = { git = "https://github.com/vE5li/dst6.git" }
