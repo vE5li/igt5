@@ -1,0 +1,62 @@
+library dst6 as kami
+
+module checked
+
+import kami::any
+import checked::Checked
+
+label main: Function(arguments: mutable Vector<String>) := {
+
+    label print_help := {
+        print_line?("usage:")
+        print_line?("   $   igt5 [options]")
+        print_line?("options:")
+        print_line?("  -h   show help menu")
+        print_line?("  -a   pass compiler arguments")
+        print_line?("  -d   set working directory")
+        print_line?("  -p   change project file")
+        print_line?("contact:")
+        print_line?("   #   github.com/ve5li/igt5")
+        print_line?("   @   ve5li@tuta.io")
+    }
+
+    initialize_time()
+    arguments.remove(0)
+
+    label working_directory := mutable Checked::none("working directory")
+    label project_file := mutable Checked::Some("project file", "compiler.data")
+    label show_help := mutable false
+
+    while arguments.is_filled() {
+        match arguments.remove(0) {
+            case "-a" -> break
+            case "-h" -> show_help := mutable true
+            case "-d" -> display?(working_directory.update(&arguments))
+            case "-p" -> display?(project_file.update(&arguments))
+            case any: invalid -> display?(error?(Message, string?("unknown flag {}", invalid)))
+        }
+    }
+
+    if show_help {
+        print_help()
+        terminate
+    }
+
+    if case Some: working_directory == working_directory.changed() {
+        if case Error == set_working_directory($working_directory) {
+            label message := format?("failed to set working directory {}", working_directory)
+            display?(error!(Message, message))
+        }
+    }
+
+    label parameters := arguments.iter().map({ string?(item) }).collect()
+    label project_file := project_file.unpack().unpack()
+    label root := display?(read_map($VectorString::from($project_file)))
+    label function_path := path?(vector?(keyword?("function"), keyword?("main")))
+    label build := map?()
+
+    match display?(root.index($function_path), $Some($root), $build) {
+        case Some: main_function -> display?(function($main_function, parameters, $None, $root, $build), $Some($root), $build)
+        case None -> display?(error?(Message, string?("main function not found")), $Some($root), $build)
+    }
+}

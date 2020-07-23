@@ -1,0 +1,38 @@
+import root::debug::any
+import root::internal::any
+
+public structure Checked<T> {
+    name: String
+    inner: Option<T>
+    set: Boolean
+}
+
+implement<T> Checked<T> {
+
+    public label some: Function(name: String, inner: T) -> Self := {
+        return implied?(name, implied Some(inner), implied false)
+    }
+
+    public label none: Function(name: String) -> Self := {
+        return implied?(name, implied None, implied false)
+    }
+
+    public label unpack: Function(self) -> Option<T> := {
+        return self.inner
+    }
+
+    public label changed: Function(self) -> Option<T> := {
+        match self.set {
+            case true -> self.inner
+            case false -> implied None
+        }
+    }
+
+    public label update: Function(&self, parameters: &Vector<T>) -> Status<()> := {
+        ensure?(!self.set, Message, string?("{} may only be set once", $self.name))
+        ensure?(parameters.is_filled(), Message, string?("expected parameter for {}", name))
+        self.inner := Some(parameters.remove(0))
+        self.set := true
+        return success?(())
+    }
+}
