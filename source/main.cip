@@ -51,7 +51,7 @@ label main: Function(arguments: mutable Vector<String>) := {
 
     label parameters := arguments.iter().map({ string?(item) }).collect()
     label project_file := project_file.unpack().unpack()
-    label root := display?(read_map($VectorString::from($project_file)))
+    label root := display?(read_map($SharedString::from($project_file)))
     label function_path := path?(vector?(keyword?("function"), keyword?("main")))
     label build := map?()
 

@@ -53,9 +53,9 @@ fn main() {
         }
     }
 
-    let parameters: Vector<Data> = command_line.iter().map(|argument| string!(argument.as_str())).collect();
+    let parameters: SharedVector<Data> = command_line.iter().map(|argument| string!(argument.as_str())).collect();
     let project_file = project_file.into_inner().unwrap();
-    let root = display!(read_map(&VectorString::from(&project_file)));
+    let root = display!(read_map(&SharedString::from(&project_file)));
     let build = map!();
 
     let main_function_path = path!(vector![keyword!("function"), keyword!("main")]);
