@@ -9,16 +9,20 @@ use kami::*;
 use checked::Checked;
 
 fn print_help_menu() {
+    println!();
     println!("usage:");
-    println!("   $   igt5 [options]");
+    println!("  $         seamonkey [options]");
+    println!();
     println!("options:");
-    println!("  -h   show help menu");
-    println!("  -a   pass compiler arguments");
-    println!("  -d   set working directory");
-    println!("  -p   change project file");
+    println!(" -h         show help menu");
+    println!(" -a         pass compiler arguments");
+    println!(" -d         set working directory");
+    println!(" -p         change project file");
+    println!();
     println!("contact:");
-    println!("   #   github.com/ve5li/igt5");
-    println!("   @   ve5li@tuta.io");
+    println!("  #         github.com/ve5li/igt5");
+    println!("  @         ve5li@tuta.io");
+    println!();
 }
 
 fn main() {
