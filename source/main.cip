@@ -33,7 +33,7 @@ label main: Function(arguments: mutable Vector<String>) := {
             case "-h" -> show_help := mutable true
             case "-d" -> display?(working_directory.update(&arguments))
             case "-p" -> display?(project_file.update(&arguments))
-            case any: invalid -> display?(error?(Message, string?("unknown flag {}", invalid)))
+            case any: invalid -> display?(error?(string?("unknown flag {}", invalid)))
         }
     }
 
@@ -45,7 +45,7 @@ label main: Function(arguments: mutable Vector<String>) := {
     if case Some: working_directory == working_directory.changed() {
         if case Error == set_working_directory($working_directory) {
             label message := format?("failed to set working directory {}", working_directory)
-            display?(error!(Message, message))
+            display?(error!(message))
         }
     }
 
@@ -57,6 +57,6 @@ label main: Function(arguments: mutable Vector<String>) := {
 
     match display?(root.index($function_path), $Some($root), $build) {
         case Some: main_function -> display?(function($main_function, parameters, $None, $root, $build), $Some($root), $build)
-        case None -> display?(error?(Message, string?("main function not found")), $Some($root), $build)
+        case None -> display?(error?(string?("main function not found")), $Some($root), $build)
     }
 }

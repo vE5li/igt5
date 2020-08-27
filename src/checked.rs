@@ -36,8 +36,8 @@ impl<T> Checked<T> {
     }
 
     pub fn update(&mut self, parameters: &mut Vec<T>) -> Status<()> {
-        ensure!(!self.set, Message, string!("{} may not be set twice", self.name));
-        ensure!(!parameters.is_empty(), Message, string!("parameters expected {}", self.name));
+        ensure!(!self.set, string!("{} may not be set twice", self.name));
+        ensure!(!parameters.is_empty(), string!("parameters expected {}", self.name));
         self.inner = Some(parameters.remove(0));
         self.set = true;
         return success!(());

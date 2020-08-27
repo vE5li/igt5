@@ -40,7 +40,7 @@ fn main() {
             "-h" => show_help_menu = true,
             "-d" => display!(working_directory.update(&mut command_line)),
             "-p" => display!(project_file.update(&mut command_line)),
-            invalid => display!(error!(Message, string!("unknown flag {}", invalid))),
+            invalid => display!(error!(string!("unknown flag {}", invalid))),
         }
     }
 
@@ -53,7 +53,7 @@ fn main() {
         let status = env::set_current_dir(&Path::new(&working_directory));
         if status.is_err() {
             let message = format!("failed to set working directory {}", working_directory);
-            display!(error!(Message, string!(message.as_str())));
+            display!(error!(string!(message.as_str())));
         }
     }
 
@@ -65,6 +65,6 @@ fn main() {
     let main_function_path = path!(vector![keyword!("function"), keyword!("main")]);
     match display!(root.index(&main_function_path), &Some(&root), &build) {
         Some(main_function) => display!(function(&main_function, parameters, &None, &root, &build), &Some(&root), &build),
-        None => display!(error!(Message, string!("main function not found")), &Some(&root), &build),
+        None => display!(error!(string!("main function not found")), &Some(&root), &build),
     };
 }
