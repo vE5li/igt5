@@ -1,17 +1,17 @@
-extern crate dst6 as kami;
+extern crate seamonkey;
 
 mod checked;
 
 use std::path::Path;
 use std::env;
 
-use kami::*;
+use seamonkey::*;
 use checked::Checked;
 
 fn print_help_menu() {
     println!();
     println!("usage:");
-    println!("  $         seamonkey [options]");
+    println!("  $         seashell [options]");
     println!();
     println!("options:");
     println!(" -h         show help menu");
@@ -20,7 +20,7 @@ fn print_help_menu() {
     println!(" -p         change project file");
     println!();
     println!("contact:");
-    println!("  #         github.com/ve5li/igt5");
+    println!("  #         github.com/ve5li/seashell");
     println!("  @         ve5li@tuta.io");
     println!();
 }

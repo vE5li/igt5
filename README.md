@@ -15,10 +15,10 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 With rust installed you can compile seamonkey with these commands:
 ```
-git clone https://github.com/ve5li/igt5
-cd igt5/
+git clone https://github.com/ve5li/seamonkey
+cd seamonkey/
 cargo build
-sudo cp target/debug/igt5 /usr/bin/seamonkey
+sudo cp target/debug/seamonkey /usr/bin/seamonkey
 ```
 
 # usage

@@ -1,4 +1,4 @@
-use kami::*;
+use seamonkey::*;
 
 pub struct Checked<T> {
     name: &'static str,

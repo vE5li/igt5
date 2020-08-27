@@ -1,22 +1,22 @@
-library dst6 as kami
+library seamonkey
 
 module checked
 
-import kami::any
+import seamonkey::any
 import checked::Checked
 
 label main: Function(arguments: mutable Vector<String>) := {
 
     label print_help := {
         print_line?("usage:")
-        print_line?("   $   igt5 [options]")
+        print_line?("   $   seamonkey [options]")
         print_line?("options:")
         print_line?("  -h   show help menu")
         print_line?("  -a   pass compiler arguments")
         print_line?("  -d   set working directory")
         print_line?("  -p   change project file")
         print_line?("contact:")
-        print_line?("   #   github.com/ve5li/igt5")
+        print_line?("   #   github.com/ve5li/seamonkey")
         print_line?("   @   ve5li@tuta.io")
     }
 
