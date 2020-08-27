@@ -1,5 +1,9 @@
 [package]
+<<<<<<< HEAD
 name = "seashell"
+=======
+name = "seamonkey"
+>>>>>>> 59b0e5ffefed234bb849bc6209eb4655a6c86008
 version = "0.1.0"
 authors = ["ve5li <ve5li@tuta.io>"]
 
