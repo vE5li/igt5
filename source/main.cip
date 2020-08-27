@@ -21,12 +21,12 @@ label main: Function(arguments: mutable Vector<String>) := {
     }
 
     initialize_time()
-    arguments.remove(1)
 
     label working_directory := mutable Checked::none("working directory")
     label project_file := mutable Checked::Some("project file", "compiler.data")
     label show_help := mutable false
 
+    arguments.remove(1)
     while arguments.is_filled() {
         match arguments.remove(1) {
             case "-a" -> break
@@ -49,8 +49,8 @@ label main: Function(arguments: mutable Vector<String>) := {
         }
     }
 
-    label parameters := arguments.iter().map({ string?(item) }).collect()
-    label project_file := project_file.unpack().unpack()
+    label parameters := arguments.iterator().map({ string?(item) }).collect()
+    label project_file := project_file.unpack()
     label root := display?(read_map($SharedString::from($project_file)))
     label function_path := path?(vector?(keyword?("function"), keyword?("main")))
     label build := map?()

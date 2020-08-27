@@ -18,14 +18,11 @@ implement<T> Checked<T> {
     }
 
     public label unpack: Function(self) -> Option<T> := {
-        return self.inner
+        return self.inner.unpack()
     }
 
     public label changed: Function(self) -> Option<T> := {
-        match self.set {
-            case true -> self.inner
-            case false -> implied None
-        }
+        return if?(self.set, self.inner, implied None)
     }
 
     public label update: Function(&self, parameters: &Vector<T>) -> Status<()> := {
