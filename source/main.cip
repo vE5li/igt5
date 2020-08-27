@@ -21,14 +21,14 @@ label main: Function(arguments: mutable Vector<String>) := {
     }
 
     initialize_time()
-    arguments.remove(0)
+    arguments.remove(1)
 
     label working_directory := mutable Checked::none("working directory")
     label project_file := mutable Checked::Some("project file", "compiler.data")
     label show_help := mutable false
 
     while arguments.is_filled() {
-        match arguments.remove(0) {
+        match arguments.remove(1) {
             case "-a" -> break
             case "-h" -> show_help := mutable true
             case "-d" -> display?(working_directory.update(&arguments))

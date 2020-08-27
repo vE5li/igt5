@@ -31,7 +31,7 @@ implement<T> Checked<T> {
     public label update: Function(&self, parameters: &Vector<T>) -> Status<()> := {
         ensure?(!self.set, Message, string?("{} may only be set once", $self.name))
         ensure?(parameters.is_filled(), Message, string?("expected parameter for {}", name))
-        self.inner := Some(parameters.remove(0))
+        self.inner := Some(parameters.remove(1))
         self.set := true
         return success?(())
     }
