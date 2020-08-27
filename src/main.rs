@@ -20,7 +20,7 @@ fn print_help_menu() {
     println!(" -p         change project file");
     println!();
     println!("contact:");
-    println!("  #         github.com/ve5li/igt5");
+    println!("  #         github.com/ve5li/seamonkey");
     println!("  @         ve5li@tuta.io");
     println!();
 }
