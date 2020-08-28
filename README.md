@@ -2,10 +2,10 @@
 Seamonkey is a scripting language designed for building compilers by automating tasks such as tokenizing and parsing.
 
 # build
-For building on linux, you can use the install script provided in [nt33](https://github.com/ve5li/nt33) to install the entire toolchain. Simply clone the repository and execute the installer as such:
+For building on linux, you can use the install script provided in [yardstick](https://github.com/ve5li/yardstick) to install the entire toolchain. Simply clone the repository and execute the installer as such:
 ```
-git clone https://github.com/ve5li/nt33
-cd nt33/untility
+git clone https://github.com/ve5li/yardstick
+cd yardstick/untility
 ./install.sh
 ```
 
@@ -27,4 +27,4 @@ You can specify a different project file with the ```-p``` flag and a different 
 Everything after ```-a``` will be passed to the projects main function as a parameter.
 
 There is currently not a lot of documentation other than a list of valid instructions and conditions but there are compilers built using seamonkey, mainly [h0vs](https://github.com/ve5li/h0vs), [ktl9](https://github.com/ve5li/ktl9) and [jts3](https://github.com/ve5li/jts3).
-There is also a project for testing the toolchain called [nt33](https://github.com/ve5li/nt33).
+There is also a project for testing the toolchain called [yardstick](https://github.com/ve5li/yardstick).
