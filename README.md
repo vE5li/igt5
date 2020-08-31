@@ -13,12 +13,12 @@ If you only want to install seashell without the toolchain, make sure that you h
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
-With rust installed you can compile seamonkey with these commands:
+With rust installed you can compile seashell with these commands:
 ```
-git clone https://github.com/ve5li/seamonkey
-cd seamonkey/
+git clone https://github.com/ve5li/seashell
+cd seashell/
 cargo build
-sudo cp target/debug/seamonkey /usr/bin/seamonkey
+sudo cp target/debug/seashell /usr/bin/seashell
 ```
 
 # usage
