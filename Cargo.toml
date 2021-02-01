@@ -3,6 +3,7 @@ name = "seashell"
 version = "0.1.0"
 authors = ["ve5li <ve5li@tuta.io>"]
 
-[dependencies]
-seamonkey = { path = "/usr/share/seamonkey" }
-#seamonkey = { git = "https://github.com/vE5li/seamonkey.git" }
+[dependencies.seamonkey]
+path = "/usr/share/seamonkey"
+#git = "https://github.com/vE5li/seamonkey.git"
+features = ["tokenize", "parse", "build"]
