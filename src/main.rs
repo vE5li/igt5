@@ -62,9 +62,5 @@ fn main() {
     let root = display!(read_map(&SharedString::from(&project_file)));
     let build = map!();
 
-    let main_function_path = path!(vector![keyword!("function"), keyword!("main")]);
-    match display!(root.index(&main_function_path), &Some(&root), &build) {
-        Some(main_function) => display!(function(&main_function, parameters, &None, &root, &build), &Some(&root), &build),
-        None => display!(error!(string!("main function not found")), &Some(&root), &build),
-    };
+    display!(function(&keyword!("main"), parameters, &None, &root, &build), &Some(&root), &build);
 }
