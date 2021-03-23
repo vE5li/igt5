@@ -11,7 +11,7 @@ use checked::Checked;
 fn print_help_menu() {
     println!();
     println!("usage:");
-    println!("  $         seashell [options]");
+    println!("  $         leafsheep [options]");
     println!();
     println!("options:");
     println!(" -h         show help menu");
@@ -20,7 +20,7 @@ fn print_help_menu() {
     println!(" -p         change project file");
     println!();
     println!("contact:");
-    println!("  #         github.com/ve5li/seashell");
+    println!("  #         github.com/ve5li/leafsheep");
     println!("  @         ve5li@tuta.io");
     println!();
 }

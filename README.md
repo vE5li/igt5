@@ -1,5 +1,5 @@
 # description
-Seashell is a scripting language designed for building compilers by automating tasks such as tokenizing and parsing.
+leafsheep is a scripting language designed for building compilers by automating tasks such as tokenizing and parsing.
 
 # build
 For building on linux, you can use the install script provided in [yardstick](https://github.com/ve5li/yardstick) to install the entire toolchain. Simply clone the repository and execute the installer as such:
@@ -9,16 +9,16 @@ cd yardstick/untility
 ./install.sh
 ```
 
-If you only want to install seashell without the toolchain, make sure that you have the latest version of rust nightly installed on your system. You can install rust using this command:
+If you only want to install leafsheep without the toolchain, make sure that you have the latest version of rust nightly installed on your system. You can install rust using this command:
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
-With rust installed you can compile seashell with these commands:
+With rust installed you can compile leafsheep with these commands:
 ```
-git clone https://github.com/ve5li/seashell
-cd seashell/
+git clone https://github.com/ve5li/leafsheep
+cd leafsheep/
 cargo build
-sudo cp target/debug/seashell /usr/bin/seashell
+sudo cp target/debug/leafsheep /usr/bin/leafsheep
 ```
 
 # usage
