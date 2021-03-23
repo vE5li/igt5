@@ -1,5 +1,5 @@
 # description
-leafsheep is a scripting language designed for building compilers by automating tasks such as tokenizing and parsing.
+Leafsheep is a scripting language designed for building compilers by automating tasks such as tokenizing and parsing.
 
 # build
 For building on linux, you can use the install script provided in [yardstick](https://github.com/ve5li/yardstick) to install the entire toolchain. Simply clone the repository and execute the installer as such:
